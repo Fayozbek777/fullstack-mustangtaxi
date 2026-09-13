@@ -1,36 +1,38 @@
 /* =========================================================
-   MUSTANG TAXI — index.css
-   Базовые стили + фирменные цвета проекта
-   (значения синхронизированы с tailwind.config в base.html)
+   MUSTANG TAXI — index.css (FIXED)
+   - Разделение ответственности: Motion vs CSS-parallax
+   - Никаких transition на transform у JS-анимируемых элементов
+   - will-change только на время анимации (управляется из JS)
    ========================================================= */
 
 :root {
   /* ---- Фирменная палитра ---- */
-  --color-brand-yellow:      #ffd700;
+  --color-brand-yellow: #ffd700;
   --color-brand-yellow-dark: #e6c200;
   --color-brand-yellow-soft: #fffbe6;
-  --color-brand-gray:        #8d8d9a;
-  --color-brand-gray-soft:   #f5f5f7;
-  --color-brand-black:       #0a0a0a;
-  --color-white:             #ffffff;
+  --color-brand-gray: #8d8d9a;
+  --color-brand-gray-soft: #f5f5f7;
+  --color-brand-black: #0a0a0a;
+  --color-white: #ffffff;
 
   /* ---- Тени / свечения ---- */
-  --shadow-soft:  0 2px 8px rgba(10, 10, 10, 0.06);
+  --shadow-soft: 0 2px 8px rgba(10, 10, 10, 0.06);
   --shadow-hover: 0 20px 48px rgba(10, 10, 10, 0.12);
-  --shadow-glow:  0 6px 20px rgba(255, 215, 0, 0.35);
+  --shadow-glow: 0 6px 20px rgba(255, 215, 0, 0.35);
   --shadow-glow-hover: 0 10px 28px rgba(255, 215, 0, 0.5);
 
   /* ---- Типографика ---- */
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans:
+    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  /* ---- Тайминги анимаций ---- */
+  /* ---- Тайминги ---- */
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 200ms;
   --duration-base: 300ms;
   --duration-slow: 400ms;
 }
 
-/* ========================================================= 
+/* =========================================================
    RESET
    ========================================================= */
 
@@ -85,7 +87,7 @@ ol {
   list-style: none;
 }
 
-/* ========================================================= 
+/* =========================================================
    ВЫДЕЛЕНИЕ ТЕКСТА
    ========================================================= */
 
@@ -94,7 +96,7 @@ ol {
   color: var(--color-brand-black);
 }
 
-/* ========================================================= 
+/* =========================================================
    СКРОЛЛБАР
    ========================================================= */
 
@@ -121,8 +123,8 @@ ol {
   background-color: var(--color-brand-yellow);
 }
 
-/* ========================================================= 
-   ФОКУС (доступность с клавиатуры)
+/* =========================================================
+   ФОКУС
    ========================================================= */
 
 :focus {
@@ -135,8 +137,8 @@ ol {
   border-radius: 4px;
 }
 
-/* ========================================================= 
-   БЛОКИРОВКА СКРОЛЛА (мобильное меню открыто)
+/* =========================================================
+   БЛОКИРОВКА СКРОЛЛА
    ========================================================= */
 
 body.no-scroll {
@@ -144,17 +146,66 @@ body.no-scroll {
   height: 100dvh;
 }
 
-/* ========================================================= 
-   ПАРАЛЛАКС-ИКОНКИ НА ГЕРОЕ
+/* =========================================================
+   ПАРАЛЛАКС — РАЗДЕЛЕНИЕ ОТВЕТСТВЕННОСТИ
+   ---------------------------------------------------------
+   [data-float]       → управляется Motion (transform: y/rotate)
+   [data-parallax-p]  → управляется CSS через --px / --py
+   НИКОГДА не смешивать на одном элементе.
    ========================================================= */
 
+/* float-иконки: Motion полностью владеет transform.
+   Никаких transition на transform — иначе появится
+   "догоняющий" хвост и визуальные рывки. */
 [data-float] {
-  will-change: transform;
-  transition: transform 0.3s ease-out;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  /* transition: transform НЕ ставим */
 }
 
-/* ========================================================= 
-   МЯГКИЙ ГРАДИЕНТНЫЙ ФОН ДЛЯ АКЦЕНТНЫХ БЛОКОВ
+/* Обёртка для мышиного parallax: переменные --px/--py пишет JS,
+   transform собирается в CSS — не конфликтует с Motion. */
+[data-parallax-p] {
+  transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  [data-parallax-p] {
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+}
+
+/* =========================================================
+   REVEAL — стартовое состояние до JS
+   ========================================================= */
+
+[data-reveal] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* =========================================================
+   PARALLAX НА СКРОЛЛЕ (видео, фоны)
+   Управляется JS, но подсветим браузеру слой.
+   ========================================================= */
+
+[data-parallax] {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* =========================================================
+   МЯГКИЙ ГРАДИЕНТ / СВЕЧЕНИЕ
    ========================================================= */
 
 .brand-gradient {
@@ -173,7 +224,7 @@ body.no-scroll {
   box-shadow: var(--shadow-glow-hover);
 }
 
-/* ========================================================= 
+/* =========================================================
    УВАЖЕНИЕ К prefers-reduced-motion
    ========================================================= */
 
@@ -188,12 +239,87 @@ body.no-scroll {
   }
 }
 
-/* ========================================================= 
-   АДАПТИВНЫЕ ШРИФТОВЫЕ РАЗМЕРЫ (fluid type)
+/* =========================================================
+   FLUID TYPE
    ========================================================= */
 
 @media (max-width: 480px) {
   h1 {
     letter-spacing: -0.02em;
   }
+}
+
+/* =========================================================
+   INSTAGRAM SCROLL VIDEOS (scoped)
+   ========================================================= */
+
+#insta-scroll .insta-video {
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+#insta-scroll .insta-video.is-active {
+  opacity: 1;
+}
+
+#insta-scroll .insta-dot-fill {
+  transition: width 150ms linear;
+}
+
+#insta-scroll .insta-control {
+  transition:
+    background-color 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+#insta-scroll .insta-control:hover {
+  box-shadow: 0 10px 28px rgba(255, 215, 0, 0.45);
+  transform: translateY(-2px);
+}
+#insta-scroll .insta-control:focus-visible {
+  outline: 2px solid var(--color-brand-black, #0a0a0a);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #insta-scroll .insta-video,
+  #insta-scroll .insta-control,
+  #insta-scroll .insta-dot-fill {
+    transition: none !important;
+  }
+}
+/* Скрыть скроллбар у карусели */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Плавность карточек */
+.rev-card > div {
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rev-card > div:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 80px rgba(10, 10, 10, 0.25);
+}
+
+/* Точки */
+.rev-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(10, 10, 10, 0.15);
+  transition:
+    width 0.3s ease,
+    background-color 0.3s ease;
+}
+.rev-dot.is-active {
+  width: 20px;
+  background: #ffd700;
 }

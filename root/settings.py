@@ -1,4 +1,5 @@
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _  # ← 1. добавь импорт
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,20 +14,25 @@ ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 # ILOVALAR
 # ============================================================
 INSTALLED_APPS = [
-    "jazzmin",  # Admin panel dizayni (eng yuqorida turishi shart)
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "apps",  # ← bizning ilova
+    "apps",
+    "rosetta",
 ]
 
 
+# ============================================================
+# MIDDLEWARE
+# ============================================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",  # ← 2. ПОСЛЕ SessionMiddleware
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -39,6 +45,10 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 
 ROOT_URLCONF = "root.urls"
 
+
+# ============================================================
+# TEMPLATES (добавлен i18n context processor)
+# ============================================================
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -49,6 +59,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.i18n",  # ← 3. добавь
             ],
         },
     },
@@ -74,13 +85,38 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+
+ROSETTA_SHOW_AT_ADMIN_PANEL = True  # ссылка в админке Jazzmin
+ROSETTA_REQUIRES_AUTH = True  # только для админов
+ROSETTA_WSGI_AUTO_RELOAD = DEBUG  # авто-перезагрузка в dev
+ROSETTA_UWSGI_AUTO_RELOAD = DEBUG
+ROSETTA_MESSAGES_PER_PAGE = 50  # строк на страницу
+ROSETTA_ENABLE_REFLANG = True  # выбирать любой язык из списка
+ROSETTA_LANGUAGE_GROUPS = True
+
+
 # ============================================================
-# TIL VA VAQT
+# TIL VA VAQT (обновлено для i18n)
 # ============================================================
 LANGUAGE_CODE = "uz"
-TIME_ZONE = "Asia/Tashkent"
-USE_I18N = True
+
+# 4. Языки которые поддерживает сайт
+LANGUAGES = [
+    ("uz", _("O‘zbekcha")),
+    ("ru", _("Русский")),
+    ("en", _("English")),
+    ("hi", _("हिन्दी")),
+    ("ur", _("اردو")),
+]
+
+# 5. Папка где будут храниться файлы переводов
+LOCALE_PATHS = [BASE_DIR / "locale"]
+
+USE_I18N = True  # ← уже есть
+USE_L10N = True  # ← 6. добавь (форматирование дат/чисел по локали)
 USE_TZ = True
+
+TIME_ZONE = "Asia/Tashkent"
 
 
 # ============================================================
@@ -95,7 +131,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 # ============================================================
-# CUSTOM USER MODEL (muhim!)
+# CUSTOM USER MODEL
 # ============================================================
 AUTH_USER_MODEL = "apps.User"
 

@@ -1,0 +1,615 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-12 12:40+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: root/settings.py:105
+msgid "O‘zbekcha"
+msgstr ""
+
+#: root/settings.py:106
+msgid "Русский"
+msgstr ""
+
+#: root/settings.py:107
+msgid "English"
+msgstr ""
+
+#: root/settings.py:108
+msgid "हिन्दी"
+msgstr ""
+
+#: root/settings.py:109
+msgid "اردو"
+msgstr ""
+
+#: templates/base.html:9
+msgid ""
+"Mustang — Toshkent bo'ylab skuter, velosiped va sumkalarni bir necha "
+"soniyada ijaraga oling."
+msgstr ""
+
+#: templates/base.html:10 templates/index.html:5
+msgid "Mustang Taxi"
+msgstr ""
+
+#: templates/base.html:85 templates/base.html:230
+msgid "Bosh Sahifa"
+msgstr ""
+
+#: templates/base.html:93 templates/base.html:237
+msgid "Skooterlar"
+msgstr ""
+
+#: templates/base.html:106
+msgid "Elektroskuter, 45 km/soat"
+msgstr ""
+
+#: templates/base.html:116
+msgid "Maksimal quvvat"
+msgstr ""
+
+#: templates/base.html:126 templates/base.html:279
+msgid "Velosipedlar"
+msgstr ""
+
+#: templates/base.html:131 templates/base.html:284
+msgid "Sumkalar"
+msgstr ""
+
+#: templates/base.html:192 templates/base.html:294
+msgid "Ariza Topshirish"
+msgstr ""
+
+#: templates/base.html:196
+msgid "Menyu"
+msgstr ""
+
+#: templates/base.html:221
+msgid "Yopish"
+msgstr ""
+
+#: templates/base.html:260
+msgid "Maksimum"
+msgstr ""
+
+#: templates/base.html:270
+msgid "Yengil"
+msgstr ""
+
+#: templates/base.html:316
+msgid ""
+"Toshkent bo‘ylab skuter, velosiped va sumkalarni bir necha soniyada ijaraga "
+"oling."
+msgstr ""
+
+#: templates/base.html:333
+msgid "Xizmatlar"
+msgstr ""
+
+#: templates/base.html:337
+msgid "Skuter ijarasi"
+msgstr ""
+
+#: templates/base.html:342
+msgid "Velosiped ijarasi"
+msgstr ""
+
+#: templates/base.html:347
+msgid "Sumka ijarasi"
+msgstr ""
+
+#: templates/base.html:352
+msgid "Qanday ishlaydi"
+msgstr ""
+
+#: templates/base.html:360
+msgid "Kompaniya"
+msgstr ""
+
+#: templates/base.html:364 templates/index.html:167
+msgid "Biz haqimizda"
+msgstr ""
+
+#: templates/base.html:369
+msgid "Hamkorlar"
+msgstr ""
+
+#: templates/base.html:374
+msgid "Karyera"
+msgstr ""
+
+#: templates/base.html:379
+msgid "Qoidalar"
+msgstr ""
+
+#: templates/base.html:387
+msgid "Aloqa"
+msgstr ""
+
+#: templates/base.html:399
+msgid "Toshkent, O‘zbekiston"
+msgstr ""
+
+#: templates/base.html:407
+msgid "Barcha huquqlar himoyalangan."
+msgstr ""
+
+#: templates/base.html:411
+msgid "Maxfiylik siyosati"
+msgstr ""
+
+#: templates/base.html:414
+msgid "Foydalanish shartlari"
+msgstr ""
+
+#: templates/index.html:45
+msgid "Toshkentda tezkor ijara"
+msgstr ""
+
+#: templates/index.html:49
+msgid "Xush kelibsiz"
+msgstr ""
+
+#: templates/index.html:51 templates/index.html:140 templates/index.html:520
+msgid "My Mustang"
+msgstr ""
+
+#: templates/index.html:56
+msgid ""
+"Toshkent bo‘ylab zamonaviy skuter, velosiped va yetkazib berish sumkalarini "
+"tez, qulay va ishonchli tarzda ijaraga oling."
+msgstr ""
+
+#: templates/index.html:63
+msgid "Hoziroq bog‘laning"
+msgstr ""
+
+#: templates/index.html:70
+msgid "Qanday ishlaydi?"
+msgstr ""
+
+#: templates/index.html:77
+msgid "Mijozlar"
+msgstr ""
+
+#: templates/index.html:82 templates/index.html:243
+msgid "Skuterlar"
+msgstr ""
+
+#: templates/index.html:87
+msgid "Qo‘llab-quvvatlash"
+msgstr ""
+
+#: templates/index.html:98
+msgid "MY MUSTANG"
+msgstr ""
+
+#: templates/index.html:99
+msgid "Sizning yo‘lingiz."
+msgstr ""
+
+#: templates/index.html:112
+msgid "Tez va qulay"
+msgstr ""
+
+#: templates/index.html:113
+msgid "Buyurtma bir necha daqiqada"
+msgstr ""
+
+#: templates/index.html:122
+msgid "Toshkent bo‘ylab"
+msgstr ""
+
+#: templates/index.html:123
+msgid "Qulay joylashuv va xizmat"
+msgstr ""
+
+#: templates/index.html:132
+msgid "Ishonchli xizmat"
+msgstr ""
+
+#: templates/index.html:133
+msgid "Oddiy va tushunarli shartlar"
+msgstr ""
+
+#: templates/index.html:141
+msgid "Harakatni boshlang"
+msgstr ""
+
+#: templates/index.html:143
+msgid "Boshlash"
+msgstr ""
+
+#: templates/index.html:155
+msgid "Scroll"
+msgstr ""
+
+#: templates/index.html:171
+msgid "Sizning Erkin"
+msgstr ""
+
+#: templates/index.html:172
+msgid "Transportingiz"
+msgstr ""
+
+#: templates/index.html:176
+msgid ""
+"Biz Toshkent bo‘ylab zamonaviy elektroskuterlar va yetkazib berish uchun "
+"qulay sumkalarni ijaraga beramiz."
+msgstr ""
+
+#: templates/index.html:180
+msgid ""
+"Tez yetkazib berish, yangi modellar, qulay narxlar va ajoyib xizmat — bizni "
+"boshqalardan ajratib turadi."
+msgstr ""
+
+#: templates/index.html:204
+msgid "Scooter Collage"
+msgstr ""
+
+#: templates/index.html:207
+msgid "Zamonaviy"
+msgstr ""
+
+#: templates/index.html:208
+msgid "elektroskuterlar"
+msgstr ""
+
+#: templates/index.html:211
+msgid "Har bir model — shahar uchun. Yengil, tez va ishonchli."
+msgstr ""
+
+#: templates/index.html:218
+msgid "Toshkentda"
+msgstr ""
+
+#: templates/index.html:232
+msgid "Mamnun mijozlar"
+msgstr ""
+
+#: templates/index.html:254
+msgid "24/7 qo‘llab-quvvatlash"
+msgstr ""
+
+#: templates/index.html:273
+msgid "Jarayon"
+msgstr ""
+
+#: templates/index.html:277
+msgid "Ariza qoldiring —"
+msgstr ""
+
+#: templates/index.html:278
+msgid "qolganini biz qilamiz"
+msgstr ""
+
+#: templates/index.html:282
+msgid ""
+"Uch qadam: ariza → aloqa → shartnoma. Hech qanday navbat, hech qanday "
+"ortiqcha harakat."
+msgstr ""
+
+#: templates/index.html:296
+msgid "Ariza qoldiring"
+msgstr ""
+
+#: templates/index.html:297
+msgid ""
+"Sayt yoki ilova orqali qisqa formani to‘ldiring — 30 soniyadan ko‘p vaqt "
+"ketmaydi."
+msgstr ""
+
+#: templates/index.html:307
+msgid "Siz bilan bog‘lanamiz"
+msgstr ""
+
+#: templates/index.html:308
+msgid ""
+"Operator 5 daqiqa ichida qo‘ng‘iroq qiladi, tafsilotlarni aniqlaydi va qulay "
+"vaqtni tanlaydi."
+msgstr ""
+
+#: templates/index.html:321
+msgid "Yetib boring va shartnoma tuzing"
+msgstr ""
+
+#: templates/index.html:323
+msgid ""
+"Biz aytgan manzilga yetib boring va <span class=\"text-brand-yellow font-"
+"semibold\">Mustang Shartnoma</span>ni o‘qing. Roziligingizni bildirsangiz — "
+"kalitlar sizniki."
+msgstr ""
+
+#: templates/index.html:328 templates/index.html:516
+msgid "Mustang Shartnoma"
+msgstr ""
+
+#: templates/index.html:337 templates/index.html:491
+msgid "Ariza qoldirish"
+msgstr ""
+
+#: templates/index.html:339
+msgid "O‘rtacha javob vaqti — 5 daqiqa"
+msgstr ""
+
+#: templates/index.html:352
+msgid "Shartlar va imtiyozlar"
+msgstr ""
+
+#: templates/index.html:356
+msgid "Ariza topshirganingizdan keyin"
+msgstr ""
+
+#: templates/index.html:357
+msgid "nima olasiz"
+msgstr ""
+
+#: templates/index.html:361
+msgid ""
+"Biz shaffof shartlar va adolatli javobgarlikni taklif qilamiz. Har bir band "
+"aniq va tushunarli."
+msgstr ""
+
+#: templates/index.html:375
+msgid "12 soat ish kuni"
+msgstr ""
+
+#: templates/index.html:376
+msgid ""
+"Kuniga 12 soat ishlaysiz — jadval moslashuvchan, lekin barqaror va oldindan "
+"ma’lum."
+msgstr ""
+
+#: templates/index.html:387
+msgid "Birinchi oydan keyin to‘lov"
+msgstr ""
+
+#: templates/index.html:388
+msgid "Muvaffaqiyatli birinchi oydan so‘ng biz sizga to‘laymiz:"
+msgstr ""
+
+#: templates/index.html:391
+msgid "so‘m / oy"
+msgstr ""
+
+#: templates/index.html:393
+msgid "Har oy muntazam to‘lov — kechikishlarsiz."
+msgstr ""
+
+#: templates/index.html:404
+msgid "Ichki nosozlik — bizning zimmamizda"
+msgstr ""
+
+#: templates/index.html:405
+msgid ""
+"Mashina ichida biror narsa buzilsa yoki ishdan chiqsa — barcha ta’mirlash "
+"ishlarini kompaniya o‘z zimmasiga oladi."
+msgstr ""
+
+#: templates/index.html:417
+msgid "Kompaniya zimmasiga oladi"
+msgstr ""
+
+#: templates/index.html:418
+msgid "Ichki nosozliklar va xizmat"
+msgstr ""
+
+#: templates/index.html:425
+msgid "Dvigatel, akkumulyator va elektronika nosozliklari"
+msgstr ""
+
+#: templates/index.html:429
+msgid "Rejali texnik xizmat ko‘rsatish va ehtiyot qismlar"
+msgstr ""
+
+#: templates/index.html:433
+msgid "Yoqilg‘i kartasi va marshrut bo‘yicha ko‘rsatmalar"
+msgstr ""
+
+#: templates/index.html:437
+msgid "24/7 qo‘llab-quvvatlash xizmati"
+msgstr ""
+
+#: templates/index.html:441
+msgid "Har oylik to‘lov — 8.000.000 so‘m"
+msgstr ""
+
+#: templates/index.html:452
+msgid "Haydovchi javobgar"
+msgstr ""
+
+#: templates/index.html:453
+msgid "Tashqi zarar va baxtsiz hodisalar"
+msgstr ""
+
+#: templates/index.html:460
+msgid "Mashinani urib qo‘ysangiz — ta’mirlash sizning hisobingizdan"
+msgstr ""
+
+#: templates/index.html:464
+msgid "Yo‘l-transport hodisasi (YTH) sodir bo‘lsa — javobgarlik sizda"
+msgstr ""
+
+#: templates/index.html:468
+msgid "Yo‘l harakati qoidalarini buzish oqibatidagi jarimalar"
+msgstr ""
+
+#: templates/index.html:472
+msgid "Mashinani boshqa shaxsga topshirish — taqiqlangan"
+msgstr ""
+
+#: templates/index.html:476
+msgid "Spirtli ichimlik ta’sirida boshqarish — shartnoma bekor"
+msgstr ""
+
+#: templates/index.html:484
+msgid "Shartlar sizga mos keladimi?"
+msgstr ""
+
+#: templates/index.html:485
+msgid "Ariza qoldiring — qolganini biz hal qilamiz."
+msgstr ""
+
+#: templates/index.html:521
+msgid "Shartnomasi"
+msgstr ""
+
+#: templates/index.html:525
+msgid ""
+"Toshkent bo‘ylab skuter va sumkalarni ijaraga olish shartlari bilan tanishing"
+msgstr ""
+
+#: templates/index.html:537
+msgid "Yuklab olish"
+msgstr ""
+
+#: templates/index.html:538
+msgid "Shartnoma (DOCX)"
+msgstr ""
+
+#: templates/index.html:555
+msgid "Kontaktlar"
+msgstr ""
+
+#: templates/index.html:559
+msgid "Biz bilan"
+msgstr ""
+
+#: templates/index.html:559
+msgid "bog‘laning"
+msgstr ""
+
+#: templates/index.html:563
+msgid ""
+"Savollaringiz bormi? Qo‘ng‘iroq qiling yoki yozing — javob berishga "
+"tayyormiz."
+msgstr ""
+
+#: templates/index.html:577
+msgid "Manzilimiz"
+msgstr ""
+
+#: templates/index.html:579
+msgid "Istagan vaqtda qo‘ng‘iroq qiling"
+msgstr ""
+
+#: templates/index.html:591
+msgid "Bizga yozing"
+msgstr ""
+
+#: templates/index.html:593
+msgid "Telegram orqali tezkor javob"
+msgstr ""
+
+#: templates/index.html:604
+msgid "Manzil"
+msgstr ""
+
+#: templates/index.html:605
+msgid "ул. Глинки 27"
+msgstr ""
+
+#: templates/index.html:606
+msgid "Ташкент"
+msgstr ""
+
+#: templates/index.html:621
+msgid "Bizning joylashuvimiz"
+msgstr ""
+
+#: templates/index.html:622
+msgid "ул. Глинки 27, Ташкент"
+msgstr ""
+
+#: templates/index.html:630
+msgid "Xaritani ochish"
+msgstr ""
+
+#: templates/index.html:646
+msgid "Xaritani yangi oynada ochish"
+msgstr ""
+
+#: templates/index.html:678
+msgid "Admin bilan bog‘laning"
+msgstr ""
+
+#: templates/index.html:682
+msgid "Zayavka"
+msgstr ""
+
+#: templates/index.html:683
+msgid "qoldiring"
+msgstr ""
+
+#: templates/index.html:687
+msgid "Formani to‘ldiring — biz tez orada siz bilan bog‘lanamiz."
+msgstr ""
+
+#: templates/index.html:696
+msgid "Telefon"
+msgstr ""
+
+#: templates/index.html:707
+msgid "Telegram"
+msgstr ""
+
+#: templates/index.html:720
+msgid "Tez orada"
+msgstr ""
+
+#: templates/index.html:720
+msgid "Bog‘lanamiz"
+msgstr ""
+
+#: templates/index.html:731
+msgid "Ismingiz"
+msgstr ""
+
+#: templates/index.html:733
+msgid "Bobur"
+msgstr ""
+
+#: templates/index.html:741
+msgid "Familiya"
+msgstr ""
+
+#: templates/index.html:743
+msgid "Baxodirovich"
+msgstr ""
+
+#: templates/index.html:750
+msgid "Telefon Raqamingiz"
+msgstr ""
+
+#: templates/index.html:755
+msgid "Maska: +998 ## ### ## ##"
+msgstr ""
+
+#: templates/index.html:761
+msgid "Savol"
+msgstr ""
+
+#: templates/index.html:764
+msgid "Savolingizni yozing..."
+msgstr ""
+
+#: templates/index.html:771
+msgid "Yuborish"
+msgstr ""

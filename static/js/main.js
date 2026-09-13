@@ -1,20 +1,27 @@
 /* =========================================================
-   Mustang — main.js
-   Single ESM module. DOM-ready aware.
+   Mustang — main.js (FIXED v2)
+   - Один writer на одно свойство
+   - Parallax через [data-parallax-p] (CSS-переменные),
+     float-иконки через Motion — на РАЗНЫХ элементах
+   - Никаких filter:blur во входных анимациях
+   - will-change только на время анимации
+   - Reveal через один глобальный IntersectionObserver
    ========================================================= */
 
 import {
   animate,
   stagger,
-  spring,
   inView,
 } from "https://cdn.jsdelivr.net/npm/motion@10/+esm";
 
-/* ============ Shared helpers ============ */
+/* ============ Shared ============ */
 const EASE = [0.16, 1, 0.3, 1];
+const EASE_OUT_EXPO = [0.22, 1, 0.36, 1];
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const IS_MOBILE = window.matchMedia("(max-width: 768px)").matches;
+const IS_TOUCH = window.matchMedia("(hover: none)").matches;
 
+/* ---------- Dropdown helpers ---------- */
 const show = (menu, rotateEls = []) => {
   if (!menu) return;
   menu.classList.remove(
@@ -39,52 +46,13 @@ const hide = (menu, rotateEls = []) => {
   rotateEls.forEach((el) => el && el.classList.remove("rotate-180"));
 };
 
-/* Одноразовый reveal — защита от повторного запуска + снятие will-change */
-const revealOnce = (section, els, opts = {}) => {
-  if (!section || !els || !els.length) return;
-  let done = false;
-
-  inView(
-    section,
-    () => {
-      if (done) return;
-      done = true;
-
-      if (REDUCED) {
-        els.forEach((el) => {
-          el.style.opacity = "1";
-          el.style.transform = "none";
-          el.style.willChange = "";
-        });
-        return;
-      }
-
-      els.forEach((el) => (el.style.willChange = "transform, opacity"));
-
-      animate(
-        els,
-        { opacity: [0, 1], y: [40, 0] },
-        {
-          duration: 0.8,
-          easing: EASE,
-          delay: stagger(0.12),
-          ...opts,
-          onComplete: () => {
-            els.forEach((el) => (el.style.willChange = ""));
-            opts.onComplete?.();
-          },
-        },
-      );
-    },
-    { amount: 0.15 },
-  );
-};
-
-/* Общий автоплей-хелпер для фоновых видео (bg + hero) */
+/* ---------- Autoplay для видео ---------- */
 const setupAutoplay = (video) => {
   if (!video) return;
   video.muted = true;
   video.playsInline = true;
+  video.setAttribute("muted", "");
+  video.setAttribute("playsinline", "");
 
   const tryPlay = () => {
     const p = video.play();
@@ -94,49 +62,106 @@ const setupAutoplay = (video) => {
           video.play().catch(() => {});
           window.removeEventListener("touchstart", onFirst);
           window.removeEventListener("click", onFirst);
+          window.removeEventListener("scroll", onFirst);
         };
         window.addEventListener("touchstart", onFirst, {
           once: true,
           passive: true,
         });
         window.addEventListener("click", onFirst, { once: true });
+        window.addEventListener("scroll", onFirst, {
+          once: true,
+          passive: true,
+        });
       });
     }
   };
   tryPlay();
 };
 
-/* ============ Boot ============ */
+/* ---------- Параллакс через CSS-переменные ----------
+   Пишет --px / --py. Элементы ДОЛЖНЫ иметь
+   CSS-правило transform: translate3d(var(--px), var(--py), 0).
+   См. [data-parallax-p] в index.css.
+   Никогда не вызывать на элементах, которые двигает Motion. */
+function attachMouseParallax(
+  container,
+  elements,
+  { depthBase = 14, depthStep = 8 } = {},
+) {
+  if (!container || !elements.length || IS_TOUCH || REDUCED) return;
+
+  let raf = null;
+  let lastX = 0,
+    lastY = 0;
+
+  const update = () => {
+    raf = null;
+    const rect = container.getBoundingClientRect();
+    const cx = lastX - (rect.left + rect.width / 2);
+    const cy = lastY - (rect.top + rect.height / 2);
+
+    elements.forEach((el, i) => {
+      const d = depthBase + i * depthStep;
+      el.style.setProperty("--px", `${(cx / rect.width) * d}px`);
+      el.style.setProperty("--py", `${(cy / rect.height) * d}px`);
+    });
+  };
+
+  container.addEventListener(
+    "mousemove",
+    (e) => {
+      lastX = e.clientX;
+      lastY = e.clientY;
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    },
+    { passive: true },
+  );
+
+  container.addEventListener("mouseleave", () => {
+    elements.forEach((el) => {
+      el.style.setProperty("--px", "0px");
+      el.style.setProperty("--py", "0px");
+    });
+  });
+}
+
+/* =========================================================
+   Boot
+   ========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------------------------------------------
      1. NAVBAR — scroll shadow
      --------------------------------------------------------- */
   const navbar = document.getElementById("navbar");
-  let ticking = false;
-
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const scrolled = window.scrollY > 8;
-      navbar?.classList.toggle("shadow-soft", scrolled);
-      navbar?.classList.toggle("border-gray-200", scrolled);
-      navbar?.classList.toggle("border-transparent", !scrolled);
-      ticking = false;
-    });
-  };
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  if (navbar) {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrolled = window.scrollY > 8;
+        navbar.classList.toggle("shadow-soft", scrolled);
+        navbar.classList.toggle("border-gray-200", scrolled);
+        navbar.classList.toggle("border-transparent", !scrolled);
+        navbar.classList.toggle("scrolled", scrolled);
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
 
   /* ---------------------------------------------------------
-     2. NAVBAR — entrance animations
+     2. NAVBAR — entrance
      --------------------------------------------------------- */
   const logo = document.querySelector('[data-nav="logo"]');
   if (logo && !REDUCED) {
     animate(
       logo,
       { opacity: [0, 1], x: [-10, 0] },
-      { duration: 0.6, easing: EASE, delay: 0.1 },
+      { duration: 0.5, easing: EASE, delay: 0.05 },
     );
   }
 
@@ -145,13 +170,13 @@ document.addEventListener("DOMContentLoaded", () => {
     animate(
       links,
       { opacity: [0, 1], y: [-8, 0] },
-      { duration: 0.5, easing: EASE, delay: stagger(0.06, { start: 0.2 }) },
+      { duration: 0.45, easing: EASE, delay: stagger(0.05, { start: 0.15 }) },
     );
   }
 
   const cta = document.getElementById("ctaBtn");
   cta?.addEventListener("click", () => {
-    animate(cta, { scale: [1, 1.06, 1] }, { duration: 0.35, easing: EASE });
+    animate(cta, { scale: [1, 1.06, 1] }, { duration: 0.3, easing: EASE });
   });
 
   /* ---------------------------------------------------------
@@ -191,11 +216,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const setLanguage = (lang, flag, code) => {
     if (langFlag) langFlag.textContent = flag;
     if (langCode) langCode.textContent = code;
-
     document.querySelectorAll(".lang-item").forEach((b) => {
       b.classList.toggle("bg-brand-yellowSoft", b.dataset.lang === lang);
     });
-
     try {
       localStorage.setItem("mustang.lang", lang);
     } catch (_) {}
@@ -236,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------------------------------------------------------
-     6. SIDE PANEL (mobile, right)
+     6. SIDE PANEL (mobile)
      --------------------------------------------------------- */
   const burger = document.getElementById("burger");
   const overlay = document.getElementById("overlay");
@@ -286,7 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
   overlay?.addEventListener("click", closeSide);
 
   /* ---------------------------------------------------------
-     7. MOBILE DROPDOWN — Skooterlar
+     7. MOBILE DROPDOWN
      --------------------------------------------------------- */
   const mToggle = document.getElementById("mobileDropdownToggle");
   const mMenu = document.getElementById("mobileDropdown");
@@ -302,11 +325,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------------------------------------------------------
-     8. ESC — close everything
+     8. ESC — close all
      --------------------------------------------------------- */
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
-
     if (ddOpen) {
       hide(ddMenu, [ddChevron]);
       ddOpen = false;
@@ -319,117 +341,329 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ---------------------------------------------------------
-     9. RESIZE — auto-close panel on desktop
+     9. RESIZE — auto close panel
      --------------------------------------------------------- */
   window.addEventListener("resize", () => {
     if (window.innerWidth >= 1024 && panelOpen) closeSide();
   });
 
   /* ---------------------------------------------------------
-     10. ABOUT — reveal + parallax + counters
+     10. GLOBAL REVEAL — один observer на всю страницу
      --------------------------------------------------------- */
-  const aboutSection = document.getElementById("about");
-  if (aboutSection) {
-    const revealEls = aboutSection.querySelectorAll("[data-reveal]");
-    revealOnce(aboutSection, revealEls);
+  if (!REDUCED) {
+    const revealEls = document.querySelectorAll("[data-reveal]");
+    if (revealEls.length) {
+      const revealObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            revealObs.unobserve(el);
 
-    const collage = aboutSection.querySelector(".lg\\:col-span-3");
-    const icons = aboutSection.querySelectorAll("[data-collage-icon]");
+            const delayIdx = parseInt(el.dataset.delay || "0", 10);
+            const delay = delayIdx * 0.08;
 
-    if (collage && icons.length && !IS_MOBILE) {
-      let raf = null;
-      collage.addEventListener("mouseenter", () => {
-        icons.forEach((el) => (el.style.willChange = "transform"));
-      });
-      collage.addEventListener("mousemove", (e) => {
-        if (raf) return;
-        raf = requestAnimationFrame(() => {
-          const rect = collage.getBoundingClientRect();
-          const cx = (e.clientX - rect.left) / rect.width - 0.5;
-          const cy = (e.clientY - rect.top) / rect.height - 0.5;
-
-          icons.forEach((el, i) => {
-            const depth = 10 + i * 8;
-            el.style.transform = `translate3d(${cx * depth}px, ${cy * depth}px, 0)`;
+            el.style.willChange = "transform, opacity";
+            animate(
+              el,
+              { opacity: [0, 1], y: [28, 0] },
+              {
+                duration: 0.7,
+                easing: EASE_OUT_EXPO,
+                delay,
+                onComplete: () => {
+                  el.style.willChange = "";
+                },
+              },
+            );
           });
-          raf = null;
-        });
-      });
-
-      collage.addEventListener("mouseleave", () => {
-        icons.forEach((el) => {
-          el.style.transform = "";
-          el.style.willChange = "";
-        });
-      });
-    }
-
-    const counters = aboutSection.querySelectorAll("[data-counter]");
-    if (counters.length) {
-      const fmt = new Intl.NumberFormat("en-US");
-
-      const runCounter = (el) => {
-        const target = parseFloat(el.dataset.counter);
-        const suffix = el.dataset.suffix || "";
-        const duration = 1600;
-        const start = performance.now();
-
-        const tick = (now) => {
-          const p = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - p, 3);
-          const value = Math.floor(eased * target);
-          el.textContent = fmt.format(value) + suffix;
-          if (p < 1) requestAnimationFrame(tick);
-        };
-
-        requestAnimationFrame(tick);
-      };
-
-      let countersDone = false;
-      inView(
-        counters[0],
-        () => {
-          if (countersDone) return;
-          countersDone = true;
-          counters.forEach((el, i) =>
-            setTimeout(() => runCounter(el), i * 200),
-          );
         },
-        { amount: 0.4 },
+        { rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
+      );
+      revealEls.forEach((el) => revealObs.observe(el));
+    }
+  } else {
+    document.querySelectorAll("[data-reveal]").forEach((el) => {
+      el.style.opacity = "1";
+      el.style.transform = "none";
+    });
+  }
+
+  /* ---------------------------------------------------------
+     11. COUNTERS
+     --------------------------------------------------------- */
+  const counters = document.querySelectorAll("[data-counter]");
+  if (counters.length) {
+    const fmt = new Intl.NumberFormat("en-US");
+    let countersDone = false;
+
+    const counterObs = new IntersectionObserver(
+      (entries) => {
+        if (countersDone) return;
+        if (!entries.some((e) => e.isIntersecting)) return;
+        countersDone = true;
+        counterObs.disconnect();
+
+        counters.forEach((el, i) => {
+          const target = parseFloat(el.dataset.counter) || 0;
+          const suffix = el.dataset.suffix || "";
+          const duration = 1400;
+          const start = performance.now() + i * 180;
+
+          const tick = (now) => {
+            const t = Math.max(0, now - start);
+            const p = Math.min(t / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = fmt.format(Math.floor(eased * target)) + suffix;
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        });
+      },
+      { threshold: 0.4 },
+    );
+    counters.forEach((el) => counterObs.observe(el));
+  }
+
+  /* ---------------------------------------------------------
+     12. HERO — оркестрованный вход + видео
+     ---------------------------------------------------------
+     ВАЖНО: [data-float] анимируется ТОЛЬКО здесь (Motion).
+     Мышиный parallax для них — на обёртке [data-parallax-p].
+     --------------------------------------------------------- */
+  const hero = document.getElementById("hero");
+  const heroVideo = document.querySelector("[data-hero-video]");
+
+  if (heroVideo) {
+    heroVideo.playbackRate = 0.95;
+    setupAutoplay(heroVideo);
+
+    if (hero) {
+      const heroObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) heroVideo.pause();
+            else heroVideo.play().catch(() => {});
+          });
+        },
+        { threshold: 0.1 },
+      );
+      heroObs.observe(hero);
+    }
+  }
+
+  if (hero && !REDUCED) {
+    const badge = hero.querySelector('[data-hero="badge"]');
+    const words = hero.querySelectorAll("[data-word]");
+    const subtitle = hero.querySelector('[data-hero="subtitle"]');
+    const actions = hero.querySelector('[data-hero="actions"]');
+    const stats = hero.querySelector('[data-hero="stats"]');
+    const card = hero.querySelector('[data-hero="card"]');
+    const features = hero.querySelectorAll("[data-hero-feature]");
+    const floaters = hero.querySelectorAll("[data-float]");
+    const pulse = hero.querySelector("[data-pulse]");
+
+    /* badge */
+    if (badge) {
+      animate(
+        badge,
+        { opacity: [0, 1], y: [16, 0] },
+        { duration: 0.55, easing: EASE, delay: 0.1 },
       );
     }
-  }
 
-  /* ---------------------------------------------------------
-     11. HOW — reveal + hover-параллакс стрелки
-     --------------------------------------------------------- */
-  const howSection = document.getElementById("how");
-  if (howSection) {
-    const howReveals = howSection.querySelectorAll("[data-reveal]");
-    revealOnce(howSection, howReveals);
+    /* words — БЕЗ filter blur */
+    if (words.length) {
+      words.forEach((el) => (el.style.willChange = "transform, opacity"));
+      animate(
+        words,
+        { opacity: [0, 1], y: [36, 0] },
+        {
+          duration: 0.85,
+          easing: EASE_OUT_EXPO,
+          delay: stagger(0.14, { start: 0.28 }),
+          onComplete: () => {
+            words.forEach((el) => {
+              el.style.willChange = "";
+              // вернуть text-shadow только после входной анимации
+              const shadow = el.dataset.shadowAfter;
+              if (shadow) el.style.textShadow = shadow;
+            });
+          },
+        },
+      );
+    }
 
-    const howCta = document.getElementById("howCtaBtn");
-    if (howCta) {
-      howCta.addEventListener("click", () => {
-        animate(
-          howCta,
-          { scale: [1, 1.06, 1] },
-          { duration: 0.35, easing: EASE },
-        );
+    /* subtitle */
+    if (subtitle) {
+      animate(
+        subtitle,
+        { opacity: [0, 1], y: [20, 0] },
+        { duration: 0.7, easing: EASE, delay: 0.7 },
+      );
+    }
+
+    /* actions */
+    if (actions) {
+      animate(
+        actions,
+        { opacity: [0, 1], y: [20, 0] },
+        { duration: 0.7, easing: EASE, delay: 0.85 },
+      );
+    }
+
+    /* stats */
+    if (stats) {
+      animate(
+        stats,
+        { opacity: [0, 1], y: [16, 0] },
+        { duration: 0.7, easing: EASE, delay: 1.0 },
+      );
+    }
+
+    /* card */
+    if (card) {
+      animate(
+        card,
+        { opacity: [0, 1], x: [40, 0] },
+        { duration: 0.9, easing: EASE, delay: 0.45 },
+      );
+    }
+
+    /* features */
+    if (features.length) {
+      animate(
+        features,
+        { opacity: [0, 1], x: [16, 0] },
+        { duration: 0.55, easing: EASE, delay: stagger(0.1, { start: 0.9 }) },
+      );
+    }
+
+    /* floaters: вход + бесконечный float.
+       Transform полностью под контролем Motion.
+       Никаких --px/--py на этих элементах — parallax идёт на родителе. */
+    const floatPaths = [
+      { y: [0, -14, 0], rotate: [0, 5, 0] },
+      { y: [0, -10, 0], rotate: [0, -4, 0] },
+      { y: [0, -12, 0], rotate: [0, 3, 0] },
+    ];
+    floaters.forEach((el, i) => {
+      animate(
+        el,
+        { opacity: [0, 1], scale: [0.6, 1] },
+        { duration: 0.7, easing: EASE, delay: 0.55 + i * 0.12 },
+      );
+
+      animate(el, floatPaths[i % floatPaths.length], {
+        duration: 6 + i * 0.4,
+        delay: 1.3 + i * 0.2,
+        repeat: Infinity,
+        easing: "ease-in-out",
+      });
+    });
+
+    /* pulse */
+    if (pulse) {
+      animate(
+        pulse,
+        { scale: [1, 1.6, 1], opacity: [1, 0.5, 1] },
+        { duration: 1.8, repeat: Infinity, easing: "ease-in-out" },
+      );
+    }
+
+    /* CTA tap */
+    const heroCta = document.getElementById("heroPrimaryCta");
+    heroCta?.addEventListener("click", () => {
+      animate(
+        heroCta,
+        { scale: [1, 1.05, 1] },
+        { duration: 0.3, easing: EASE },
+      );
+    });
+
+    /* Клик по h1 — маленький pulse, без дублей и без color-анимации */
+    const h1 = hero.querySelector("h1");
+    if (h1) {
+      h1.addEventListener("click", () => {
+        animate(h1, { scale: [1, 1.04, 1] }, { duration: 0.5, easing: EASE });
       });
     }
   }
 
   /* ---------------------------------------------------------
-     14. BACKGROUND VIDEO — autoplay + reveal + pause offscreen
+     13. HERO — mouse parallax через обёртки [data-parallax-p]
+     ---------------------------------------------------------
+     В HTML иконки должны быть обёрнуты в <div data-parallax-p>.
+     Здесь мы двигаем ОБЁРТКИ, а не сами [data-float].
+     --------------------------------------------------------- */
+  if (hero) {
+    const layers = hero.querySelectorAll("[data-parallax-p]");
+    if (layers.length) {
+      attachMouseParallax(hero, layers, { depthBase: 14, depthStep: 8 });
+    }
+  }
+
+  /* ---------------------------------------------------------
+     14. ABOUT — параллакс иконок коллажа (через --px/--py)
+     ---------------------------------------------------------
+     Иконки внутри коллажа НЕ анимируются Motion бесконечно,
+     поэтому можно оставить parallax прямо на них.
+     Но для чистоты — оборачивайте их в [data-parallax-p].
+     --------------------------------------------------------- */
+  const collage = document.querySelector("#about .lg\\:col-span-3");
+  const collageIcons = collage
+    ? collage.querySelectorAll("[data-parallax-p]")
+    : [];
+  if (collage && collageIcons.length) {
+    attachMouseParallax(collage, collageIcons, { depthBase: 10, depthStep: 8 });
+  }
+
+  /* ---------------------------------------------------------
+     15. SCROLL PARALLAX для видео и фонов
+     --------------------------------------------------------- */
+  const pxEls = Array.from(document.querySelectorAll("[data-parallax]"));
+  if (pxEls.length && !REDUCED) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const vh = window.innerHeight;
+
+      for (let i = 0; i < pxEls.length; i++) {
+        const el = pxEls[i];
+        const speed = parseFloat(el.dataset.parallax) || 0;
+        const rect = el.getBoundingClientRect();
+
+        if (rect.bottom < -150 || rect.top > vh + 150) {
+          if (el.style.willChange) el.style.willChange = "";
+          continue;
+        }
+
+        if (!el.style.willChange) el.style.willChange = "transform";
+
+        const offset = rect.top + rect.height / 2 - vh / 2;
+        const y = -offset * speed;
+        el.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
+      }
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
+  }
+
+  /* ---------------------------------------------------------
+     16. BACKGROUND VIDEO (shartnoma)
      --------------------------------------------------------- */
   const bgVideo = document.querySelector("[data-bg-video]");
-
   if (bgVideo) {
     setupAutoplay(bgVideo);
-
     const bgSection = bgVideo.closest("section");
-
     if (bgSection) {
       const obs = new IntersectionObserver(
         (entries) => {
@@ -438,119 +672,70 @@ document.addEventListener("DOMContentLoaded", () => {
             else bgVideo.play().catch(() => {});
           });
         },
-        { threshold: 0.15 },
+        { threshold: 0.1 },
       );
       obs.observe(bgSection);
-
-      const bgReveals = bgSection.querySelectorAll("[data-reveal]");
-      if (bgReveals.length) {
-        revealOnce(bgSection, bgReveals, { y: [30, 0] });
-      }
     }
+  }
 
-    const docBtn = document.getElementById("docDownloadBtn");
-    docBtn?.addEventListener("click", () => {
-      animate(
-        docBtn,
-        { scale: [1, 1.06, 1] },
-        { duration: 0.35, easing: EASE },
+  /* ---------------------------------------------------------
+     17. CONTACT VIDEO
+     --------------------------------------------------------- */
+  const contactVideo = document.querySelector("[data-contact-video]");
+  if (contactVideo) {
+    setupAutoplay(contactVideo);
+    const contactSection = contactVideo.closest("section");
+    if (contactSection) {
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) contactVideo.pause();
+            else contactVideo.play().catch(() => {});
+          });
+        },
+        { threshold: 0.1 },
       );
+      obs.observe(contactSection);
+    }
+  }
+
+  /* ---------------------------------------------------------
+     18. VIDEOS — visibilitychange
+     --------------------------------------------------------- */
+  const allVideos = document.querySelectorAll(
+    "video[data-hero-video], video[data-bg-video], video[data-contact-video], video[data-collage-video]",
+  );
+  if (allVideos.length) {
+    document.addEventListener("visibilitychange", () => {
+      allVideos.forEach((v) => {
+        if (document.hidden) v.pause();
+        else v.play().catch(() => {});
+      });
     });
   }
 
   /* ---------------------------------------------------------
-     15. CONTACTS — reveal + spring на кнопке карты
+     19. CTA-кнопки — tap-анимация
      --------------------------------------------------------- */
-  const contactsSection = document.getElementById("contacts");
-  if (contactsSection) {
-    const contactReveals = contactsSection.querySelectorAll("[data-reveal]");
-    revealOnce(contactsSection, contactReveals);
-
-    const mapBtn = document.getElementById("mapOpenBtn");
-    mapBtn?.addEventListener("click", () => {
-      animate(
-        mapBtn,
-        { scale: [1, 1.06, 1] },
-        { duration: 0.35, easing: EASE },
-      );
-    });
-  }
-
-  /* ---------------------------------------------------------
-     16. LEGAL PAGES — reveal всех [data-reveal]
-     --------------------------------------------------------- */
-  const legalSections = document.querySelectorAll(
-    "#privacy, #terms, section:has([data-reveal])",
+  ["howCtaBtn", "benefitsCtaBtn", "docDownloadBtn", "mapOpenBtn"].forEach(
+    (id) => {
+      const el = document.getElementById(id);
+      el?.addEventListener("click", () => {
+        animate(el, { scale: [1, 1.05, 1] }, { duration: 0.3, easing: EASE });
+      });
+    },
   );
 
-  legalSections.forEach((section) => {
-    const reveals = section.querySelectorAll("[data-reveal]");
-    if (!reveals.length) return;
-    revealOnce(section, reveals, {
-      y: [30, 0],
-      duration: 0.7,
-      delay: stagger(0.08),
-    });
-  });
-
   /* ---------------------------------------------------------
-     17. LEAD FORM — маска, страна, валидация, submit
+     20. LEAD FORM
      --------------------------------------------------------- */
   const leadForm = document.getElementById("leadForm");
   if (leadForm) {
-    const formSection = document.getElementById("contact-form");
-    const formReveals = formSection?.querySelectorAll("[data-reveal]");
-    if (formSection && formReveals?.length) {
-      revealOnce(formSection, formReveals);
-    }
-
-    const countryDrop = document.getElementById("countryDrop");
-    const countryToggle = document.getElementById("countryToggle");
-    const countryMenu = document.getElementById("countryMenu");
-    const countryChevron = document.getElementById("countryChevron");
-    const countryFlag = document.getElementById("countryFlag");
-    const countryCode = document.getElementById("countryCode");
     const phoneInput = document.getElementById("phone");
-    let countryOpen = false;
-
-    const toggleCountry = (open) => {
-      countryOpen = open;
-      if (!countryMenu || !countryChevron) return;
-      if (open) {
-        countryMenu.classList.remove(
-          "opacity-0",
-          "scale-95",
-          "-translate-y-1.5",
-          "pointer-events-none",
-        );
-        countryMenu.classList.add("opacity-100", "scale-100", "translate-y-0");
-        countryChevron.classList.add("rotate-180");
-      } else {
-        countryMenu.classList.add(
-          "opacity-0",
-          "scale-95",
-          "-translate-y-1.5",
-          "pointer-events-none",
-        );
-        countryMenu.classList.remove(
-          "opacity-100",
-          "scale-100",
-          "translate-y-0",
-        );
-        countryChevron.classList.remove("rotate-180");
-      }
-    };
-
-    countryToggle?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggleCountry(!countryOpen);
-    });
-
     const applyMask = (value, mask) => {
       const digits = value.replace(/\D/g, "");
       let result = "";
       let di = 0;
-
       for (let i = 0; i < mask.length && di < digits.length; i++) {
         const ch = mask[i];
         if (ch === "#") result += digits[di++];
@@ -559,90 +744,52 @@ document.addEventListener("DOMContentLoaded", () => {
       return result;
     };
 
-    const getDigitsCount = (mask) => (mask.match(/#/g) || []).length;
-
-    document.querySelectorAll(".country-item").forEach((item) => {
-      item.addEventListener("click", () => {
-        const { country, dial, flag, code, mask } = item.dataset;
-
-        if (countryFlag) countryFlag.textContent = flag;
-        if (countryCode) countryCode.textContent = code;
-        if (phoneInput) {
-          phoneInput.dataset.mask = mask;
-          phoneInput.placeholder = mask.replace(/#/g, "_");
-          phoneInput.value = applyMask(dial + " ", mask);
-        }
-
-        document
-          .querySelectorAll(".country-item")
-          .forEach((b) =>
-            b.classList.toggle(
-              "bg-brand-graySoft",
-              b.dataset.country === country,
-            ),
-          );
-
-        toggleCountry(false);
-        phoneInput?.focus();
-      });
-    });
-
     if (phoneInput) {
       phoneInput.dataset.mask = "+998 ## ### ## ##";
-
       phoneInput.addEventListener("input", (e) => {
         const mask = phoneInput.dataset.mask || "+998 ## ### ## ##";
         e.target.value = applyMask(e.target.value, mask);
       });
-
       phoneInput.addEventListener("focus", (e) => {
-        const mask = phoneInput.dataset.mask || "+998 ## ### ## ##";
-        const dial = mask.split(" ")[0];
-        if (!e.target.value) e.target.value = dial + " ";
+        if (!e.target.value) e.target.value = "+998 ";
       });
     }
 
-    document.addEventListener("click", (e) => {
-      if (countryOpen && countryDrop && !countryDrop.contains(e.target)) {
-        toggleCountry(false);
-      }
-    });
-
-    const showError = (fieldName, msg) => {
-      const errEl = document.querySelector(`[data-error="${fieldName}"]`);
+    const showError = (name, msg) => {
+      const errEl = document.querySelector(`[data-error="${name}"]`);
       if (!errEl) return;
       errEl.textContent = msg;
       errEl.classList.toggle("hidden", !msg);
     };
 
-    const validate = () => {
-      let ok = true;
-
-      const firstEl = document.getElementById("firstName");
-      const first = firstEl ? firstEl.value.trim() : "";
-      if (first.length < 2) {
-        showError("firstName", "Ismingizni kiriting (kamida 2 harf)");
-        ok = false;
-      } else {
-        showError("firstName", "");
-      }
-
-      const mask = phoneInput?.dataset.mask || "+998 ## ### ## ##";
-      const needDigits = getDigitsCount(mask);
-      const phoneDigits = phoneInput ? phoneInput.value.replace(/\D/g, "") : "";
-      if (phoneDigits.length < needDigits) {
-        showError("phone", "Telefon raqamni to‘liq kiriting");
-        ok = false;
-      } else {
-        showError("phone", "");
-      }
-
-      return ok;
+    const getCSRFToken = () => {
+      const cookie = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("csrftoken="));
+      return cookie ? cookie.split("=")[1] : "";
     };
 
     leadForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      if (!validate()) return;
+
+      const firstEl = document.getElementById("firstName");
+      const first = firstEl ? firstEl.value.trim() : "";
+      let ok = true;
+
+      if (first.length < 2) {
+        showError("firstName", "Ismingizni kiriting (kamida 2 harf)");
+        ok = false;
+      } else showError("firstName", "");
+
+      if (phoneInput) {
+        const digits = phoneInput.value.replace(/\D/g, "");
+        if (digits.length < 12) {
+          showError("phone", "Telefon raqamni to‘liq kiriting");
+          ok = false;
+        } else showError("phone", "");
+      }
+
+      if (!ok) return;
 
       const submitBtn = document.getElementById("submitBtn");
       const status = document.getElementById("formStatus");
@@ -675,7 +822,7 @@ document.addEventListener("DOMContentLoaded", () => {
         animate(
           submitBtn,
           { scale: [1, 1.05, 1] },
-          { duration: 0.35, easing: EASE },
+          { duration: 0.3, easing: EASE },
         );
       } catch (err) {
         status.textContent =
@@ -687,207 +834,450 @@ document.addEventListener("DOMContentLoaded", () => {
         if (btnText) btnText.textContent = originalText;
       }
     });
-
-    function getCSRFToken() {
-      const cookie = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("csrftoken="));
-      return cookie ? cookie.split("=")[1] : "";
-    }
   }
 
   /* ---------------------------------------------------------
-     22. HERO v2 — background video + оркестрованный вход
-     (единственный блок для hero-видео)
+     21. INSTAGRAM SCROLL VIDEOS
      --------------------------------------------------------- */
-  const heroVideo = document.querySelector("[data-hero-video]");
-  const heroSection = document.getElementById("hero");
+  const instaSection = document.getElementById("insta-scroll");
+  if (instaSection) {
+    const track = instaSection.querySelector("[data-insta-track]");
+    const videos = Array.from(
+      instaSection.querySelectorAll("[data-insta-video]"),
+    );
+    const fills = Array.from(
+      instaSection.querySelectorAll("[data-insta-fill]"),
+    );
+    const poster = instaSection.querySelector("[data-insta-poster]");
+    const startBtn = document.getElementById("instaStartBtn");
+    const soundBtns = [
+      document.getElementById("instaSoundToggleDesktop"),
+      document.getElementById("instaSoundToggleMobile"),
+    ].filter(Boolean);
+    const soundIcons = instaSection.querySelectorAll("[data-insta-sound-icon]");
+    const soundLabels = instaSection.querySelectorAll(
+      "[data-insta-sound-label]",
+    );
 
-  if (heroVideo) {
-    setupAutoplay(heroVideo);
-    heroVideo.playbackRate = 0.9;
+    if (track && videos.length === 3) {
+      let started = false;
+      let current = 0;
+      let userMuted = false;
+      let soundUnlocked = false;
 
-    if (heroSection) {
-      const obs = new IntersectionObserver(
+      videos.forEach((v) => {
+        v.muted = true;
+        v.loop = true;
+        v.playsInline = true;
+        v.setAttribute("playsinline", "");
+        v.pause();
+      });
+
+      const applySoundUI = () => {
+        soundIcons.forEach((ic) => {
+          ic.className = userMuted
+            ? "fa-solid fa-volume-xmark"
+            : "fa-solid fa-volume-high";
+        });
+        soundLabels.forEach((lb) => {
+          lb.textContent = userMuted ? "Ovoz o‘chiq" : "Ovoz yoniq";
+        });
+        soundBtns.forEach((b) => (b.dataset.muted = String(userMuted)));
+      };
+
+      const applySoundToVideos = () => {
+        videos.forEach((v) => {
+          v.muted = userMuted;
+        });
+      };
+
+      const setActive = (idx) => {
+        if (idx === current && videos[idx].classList.contains("opacity-100"))
+          return;
+        current = idx;
+
+        videos.forEach((v, i) => {
+          if (i === idx) {
+            v.classList.remove("opacity-0");
+            v.classList.add("opacity-100");
+            if (started) v.play().catch(() => {});
+          } else {
+            v.classList.add("opacity-0");
+            v.classList.remove("opacity-100");
+            if (!v.paused) v.pause();
+          }
+        });
+      };
+
+      const start = () => {
+        if (started) return;
+        started = true;
+        soundUnlocked = true;
+        userMuted = false;
+        applySoundUI();
+        applySoundToVideos();
+
+        if (poster) {
+          poster.classList.add("opacity-0", "pointer-events-none");
+          setTimeout(() => {
+            poster.style.display = "none";
+          }, 500);
+        }
+
+        videos[current].play().catch(() => {
+          videos[current].muted = true;
+          videos[current].play().catch(() => {});
+        });
+      };
+
+      startBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        start();
+      });
+
+      soundBtns.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (!started) {
+            start();
+            return;
+          }
+          userMuted = !userMuted;
+          soundUnlocked = true;
+          applySoundUI();
+          applySoundToVideos();
+          const v = videos[current];
+          if (v) {
+            if (!userMuted) {
+              v.muted = false;
+              v.play().catch(() => {});
+            }
+          }
+        });
+      });
+
+      const unlockSound = () => {
+        if (!started || soundUnlocked) return;
+        soundUnlocked = true;
+        if (!userMuted) {
+          applySoundToVideos();
+          videos[current].play().catch(() => {});
+        }
+      };
+      ["scroll", "wheel", "touchstart", "keydown"].forEach((ev) => {
+        window.addEventListener(ev, unlockSound, { once: true, passive: true });
+      });
+
+      applySoundUI();
+
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const rect = track.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const total = rect.height - vh;
+        if (total <= 0) return;
+
+        const scrolled = Math.min(Math.max(-rect.top, 0), total);
+        const progress = scrolled / total;
+
+        const seg = Math.min(2, Math.floor(progress * 3));
+        setActive(seg);
+
+        const segSize = 1 / 3;
+        fills.forEach((fill, i) => {
+          const local = Math.min(
+            Math.max((progress - i * segSize) / segSize, 0),
+            1,
+          );
+          fill.style.width = (local * 100).toFixed(1) + "%";
+        });
+      };
+
+      const onScroll = () => {
+        if (!started) return;
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+      };
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
+
+      instaSection.querySelectorAll("[data-insta-dot]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (!started) start();
+          const i = parseInt(btn.dataset.instaDot, 10);
+          const rect = track.getBoundingClientRect();
+          const vh = window.innerHeight;
+          const total = rect.height - vh;
+          const top = window.scrollY + rect.top;
+          const target = top + total * (i / 3 + 0.05);
+          window.scrollTo({ top: target, behavior: "smooth" });
+        });
+      });
+
+      const visObs = new IntersectionObserver(
         (entries) => {
-          entries.forEach((e) => {
-            if (!e.isIntersecting) heroVideo.pause();
-            else heroVideo.play().catch(() => {});
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              videos.forEach((v) => {
+                if (!v.paused) v.pause();
+              });
+            } else if (started) {
+              videos[current].play().catch(() => {});
+            }
           });
         },
-        { threshold: 0.15 },
+        { threshold: 0.05 },
       );
-      obs.observe(heroSection);
-    }
-  }
+      visObs.observe(instaSection);
 
-  /* ---------- Единый visibilitychange для всех видео ---------- */
-  const allVideos = document.querySelectorAll(
-    "[data-bg-video], [data-hero-video]",
-  );
-  if (allVideos.length) {
-    document.addEventListener("visibilitychange", () => {
-      allVideos.forEach((v) => {
-        if (document.hidden) v.pause();
-        else v.play().catch(() => {});
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          videos.forEach((v) => v.pause());
+        } else if (started) {
+          videos[current].play().catch(() => {});
+        }
       });
-    });
+
+      setActive(0);
+    }
   }
+  /* ---------------------------------------------------------
+     22. VIDEO REVIEWS — карусель + автоплей + звук
+     - Все видео изначально muted и paused
+     - Играет только активное (в центре)
+     - Кнопка звука: включает звук ТОЛЬКО у активного,
+       остальные остаются muted
+     --------------------------------------------------------- */
+  const revSection = document.getElementById("reviews");
+  if (revSection) {
+    const track = document.getElementById("revTrack");
+    const cards = Array.from(revSection.querySelectorAll(".rev-card"));
+    const dotsWrap = document.getElementById("revDots");
+    const prevBtn = document.getElementById("revPrev");
+    const nextBtn = document.getElementById("revNext");
 
-  /* ---------- Оркестрованный вход ---------- */
-  const hero = document.getElementById("hero");
-  if (hero) {
-    const badge = hero.querySelector('[data-hero="badge"]');
-    const words = hero.querySelectorAll("[data-word]");
-    const subtitle = hero.querySelector('[data-hero="subtitle"]');
-    const actions = hero.querySelector('[data-hero="actions"]');
-    const stats = hero.querySelector('[data-hero="stats"]');
-    const card = hero.querySelector('[data-hero="card"]');
-    const features = hero.querySelectorAll("[data-hero-feature]");
-    const floaters = hero.querySelectorAll("[data-float]");
+    if (track && cards.length) {
+      // Инициализация: все paused, muted
+      cards.forEach((card) => {
+        const v = card.querySelector("[data-rev-video]");
+        if (!v) return;
+        v.muted = true;
+        v.pause();
+        v.playsInline = true;
+        v.setAttribute("playsinline", "");
+      });
 
-    const blurSafe = IS_MOBILE || REDUCED;
-
-    if (!REDUCED) {
-      if (badge) {
-        animate(
-          badge,
-          { opacity: [0, 1], y: [20, 0] },
-          { duration: 0.6, easing: EASE, delay: 0.1 },
-        );
-      }
-
-      if (words.length) {
-        const keyframes = blurSafe
-          ? { opacity: [0, 1], y: [40, 0] }
-          : {
-              opacity: [0, 1],
-              y: [40, 0],
-              filter: ["blur(10px)", "blur(0px)"],
-            };
-        words.forEach(
-          (el) => (el.style.willChange = "transform, opacity, filter"),
-        );
-        animate(words, keyframes, {
-          duration: 1,
-          easing: EASE,
-          delay: stagger(0.18, { start: 0.3 }),
-          onComplete: () => {
-            words.forEach((el) => (el.style.willChange = ""));
-          },
+      // Определяем индекс карточки ближе всего к центру трека
+      const getCenterIndex = () => {
+        const trackRect = track.getBoundingClientRect();
+        const trackCenter = trackRect.left + trackRect.width / 2;
+        let bestIdx = 0;
+        let bestDist = Infinity;
+        cards.forEach((card, i) => {
+          const r = card.getBoundingClientRect();
+          const c = r.left + r.width / 2;
+          const d = Math.abs(c - trackCenter);
+          if (d < bestDist) {
+            bestDist = d;
+            bestIdx = i;
+          }
         });
-      }
+        return bestIdx;
+      };
 
-      if (subtitle) {
-        animate(
-          subtitle,
-          { opacity: [0, 1], y: [24, 0] },
-          { duration: 0.8, easing: EASE, delay: 0.85 },
-        );
-      }
+      // Активное видео — играет. Остальные — пауза.
+      const activate = (idx) => {
+        cards.forEach((card, i) => {
+          const v = card.querySelector("[data-rev-video]");
+          const playIcon = card.querySelector("[data-rev-play]");
+          if (!v) return;
 
-      if (actions) {
-        animate(
-          actions,
-          { opacity: [0, 1], y: [24, 0] },
-          { duration: 0.8, easing: EASE, delay: 1.05 },
-        );
-      }
+          if (i === idx) {
+            const p = v.play();
+            if (p && p.catch) p.catch(() => {});
+            if (playIcon) playIcon.style.opacity = "0";
+          } else {
+            if (!v.paused) v.pause();
+            if (playIcon) playIcon.style.opacity = "1";
+            // Не сбрасываем currentTime — чтобы не мигало
+          }
+        });
 
-      if (stats) {
-        animate(
-          stats,
-          { opacity: [0, 1], y: [20, 0] },
-          { duration: 0.8, easing: EASE, delay: 1.2 },
-        );
-      }
-
-      if (card) {
-        animate(
-          card,
-          { opacity: [0, 1], x: [40, 0] },
-          { duration: 1, easing: EASE, delay: 0.6 },
-        );
-      }
-
-      if (features.length) {
-        animate(
-          features,
-          { opacity: [0, 1], x: [20, 0] },
-          { duration: 0.6, easing: EASE, delay: stagger(0.12, { start: 1.0 }) },
-        );
-      }
-    }
-
-    /* Floating-иконки: вход + бесконечный float.
-       Параллакс пишем в CSS-переменные, чтобы не конфликтовать
-       с motion.transform (иначе — дёрганье каждый кадр). */
-    floaters.forEach((el, i) => {
-      el.style.setProperty("--px", "0px");
-      el.style.setProperty("--py", "0px");
-
-      if (!REDUCED) {
-        animate(
-          el,
-          { opacity: [0, 1], scale: [0.5, 1] },
-          { duration: 0.8, easing: EASE, delay: 0.6 + i * 0.15 },
-        );
-        animate(
-          el,
-          { y: [0, -16, 0], rotate: [0, 5, 0] },
-          {
-            duration: 6 + i * 0.5,
-            delay: 1.5,
-            repeat: Infinity,
-            easing: "ease-in-out",
-          },
-        );
-      }
-    });
-
-    const pulse = hero.querySelector("[data-pulse]");
-    if (pulse && !REDUCED) {
-      animate(
-        pulse,
-        { scale: [1, 1.6, 1], opacity: [1, 0.5, 1] },
-        { duration: 1.8, repeat: Infinity, easing: "ease-in-out" },
-      );
-    }
-
-    const heroCta = document.getElementById("heroPrimaryCta");
-    heroCta?.addEventListener("click", () => {
-      animate(
-        heroCta,
-        { scale: [1, 1.05, 1] },
-        { duration: 0.35, easing: EASE },
-      );
-    });
-
-    /* Параллакс через CSS-переменные */
-    if (!IS_MOBILE && floaters.length) {
-      let raf = null;
-      hero.addEventListener("mousemove", (e) => {
-        if (raf) return;
-        raf = requestAnimationFrame(() => {
-          const rect = hero.getBoundingClientRect();
-          const cx = (e.clientX - rect.left) / rect.width - 0.5;
-          const cy = (e.clientY - rect.top) / rect.height - 0.5;
-
-          floaters.forEach((el, i) => {
-            const depth = 14 + i * 8;
-            el.style.setProperty("--px", `${cx * depth}px`);
-            el.style.setProperty("--py", `${cy * depth}px`);
+        // Точки
+        if (dotsWrap) {
+          Array.from(dotsWrap.children).forEach((d, i) => {
+            d.classList.toggle("is-active", i === idx);
           });
-          raf = null;
+        }
+      };
+
+      // Точки — создать
+      if (dotsWrap) {
+        cards.forEach((_, i) => {
+          const b = document.createElement("button");
+          b.className = "rev-dot";
+          b.setAttribute("aria-label", "Slayd " + (i + 1));
+          b.addEventListener("click", () => {
+            cards[i].scrollIntoView({
+              behavior: "smooth",
+              inline: "center",
+              block: "nearest",
+            });
+          });
+          dotsWrap.appendChild(b);
+        });
+      }
+
+      // Скролл трека — обновляем активное видео (throttled)
+      let revTicking = false;
+      const onRevScroll = () => {
+        if (revTicking) return;
+        revTicking = true;
+        requestAnimationFrame(() => {
+          revTicking = false;
+          activate(getCenterIndex());
+        });
+      };
+      track.addEventListener("scroll", onRevScroll, { passive: true });
+
+      // Стрелки
+      const scrollByCard = (dir) => {
+        const idx = getCenterIndex();
+        const next = Math.max(0, Math.min(cards.length - 1, idx + dir));
+        cards[next].scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      };
+      prevBtn?.addEventListener("click", () => scrollByCard(-1));
+      nextBtn?.addEventListener("click", () => scrollByCard(1));
+
+      // Кнопка звука внутри карточки
+      cards.forEach((card, i) => {
+        const btn = card.querySelector("[data-rev-toggle]");
+        const icon = card.querySelector("[data-rev-icon]");
+        const v = card.querySelector("[data-rev-video]");
+        if (!btn || !v) return;
+
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const willUnmute = v.muted;
+
+          // Если включаем звук — только у этой карточки,
+          // у всех остальных mute
+          cards.forEach((c) => {
+            const cv = c.querySelector("[data-rev-video]");
+            const ci = c.querySelector("[data-rev-icon]");
+            if (!cv) return;
+            if (c === card) {
+              cv.muted = !willUnmute;
+              if (ci)
+                ci.className = cv.muted
+                  ? "fa-solid fa-volume-xmark"
+                  : "fa-solid fa-volume-high";
+              if (!cv.muted) cv.play().catch(() => {});
+            } else {
+              cv.muted = true;
+              if (ci) ci.className = "fa-solid fa-volume-xmark";
+            }
+          });
         });
       });
 
-      hero.addEventListener("mouseleave", () => {
-        floaters.forEach((el) => {
-          el.style.setProperty("--px", "0px");
-          el.style.setProperty("--py", "0px");
-        });
+      // Пауза, когда секция за вьюпортом
+      const revVisObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              cards.forEach((c) => {
+                const v = c.querySelector("[data-rev-video]");
+                if (v && !v.paused) v.pause();
+              });
+            } else {
+              activate(getCenterIndex());
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+      revVisObs.observe(revSection);
+
+      // visibilitychange
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          cards.forEach((c) => {
+            const v = c.querySelector("[data-rev-video]");
+            if (v && !v.paused) v.pause();
+          });
+        } else {
+          activate(getCenterIndex());
+        }
       });
+
+      // Старт
+      requestAnimationFrame(() => activate(getCenterIndex()));
     }
   }
 });
+
+(function () {
+  "use strict";
+
+  const btn = document.getElementById("scrollTopBtn");
+  if (!btn) return;
+
+  const progress = document.getElementById("scrollTopProgress");
+  const CIRC = 2 * Math.PI * 25; // r=25 → 157.08
+
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+
+    const scrollY = window.scrollY;
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const ratio = docH > 0 ? Math.min(scrollY / docH, 1) : 0;
+
+    // Показ кнопки после 400px
+    if (scrollY > 400) {
+      btn.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
+      btn.classList.add("opacity-100", "translate-y-0");
+    } else {
+      btn.classList.add("opacity-0", "translate-y-4", "pointer-events-none");
+      btn.classList.remove("opacity-100", "translate-y-0");
+    }
+
+    // Прогресс-кольцо
+    if (progress) {
+      progress.style.strokeDashoffset = String(CIRC * (1 - ratio));
+    }
+  };
+
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  };
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+
+  // Плавный скролл наверх
+  btn.addEventListener("click", () => {
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    window.scrollTo({
+      top: 0,
+      behavior: reduce ? "auto" : "smooth",
+    });
+  });
+
+  // Стартовый расчёт
+  update();
+})();

@@ -1,0 +1,393 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Isbotlar — Mustang Taxi" %}{% endblock %}
+
+{% block extra_head %}
+<style>
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  .proof-card {
+    transition: transform .5s cubic-bezier(.16,1,.3,1),
+                box-shadow .5s cubic-bezier(.16,1,.3,1);
+  }
+  .proof-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 80px rgba(10,10,10,.18);
+  }
+
+  .rev-dot {
+    width: 6px; height: 6px; border-radius: 9999px;
+    background: rgba(10,10,10,.15);
+    transition: width .3s ease, background-color .3s ease;
+  }
+  .rev-dot.is-active { width: 22px; background: #ffd700; }
+
+  .lb-backdrop {
+    background: rgba(10,10,10,.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .lb-img {
+    max-width: 92vw; max-height: 88vh;
+    border-radius: 20px;
+    box-shadow: 0 30px 100px rgba(0,0,0,.6);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+ 
+
+<!-- ============ VIDEO REVIEWS ============ -->
+{% if reviews %}
+<section class="relative bg-white text-brand-black py-16 md:py-24">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
+
+    <!-- Заголовок -->
+    <div class="max-w-[720px] mb-12">
+      <span class="inline-flex items-center gap-2 text-brand-yellowDark font-semibold text-sm mb-3">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>
+        {% trans "Video-otzivlar" %}
+      </span>
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.05]">
+        {% trans "Ular" %} <span class="text-brand-yellow">{% trans "o‘zlari aytadi" %}</span>
+      </h2>
+      <p class="mt-4 text-base md:text-lg text-brand-gray leading-relaxed">
+        {% trans "Bosib kattalashtiring va ovozini yoqing." %}
+      </p>
+    </div>
+
+    <!-- Сетка карточек -->
+    <div id="revGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+
+      {% for r in reviews %}
+      <article
+        data-review-card
+        data-video="{{ r.video.url }}"
+        data-name="{{ r.name }}"
+        data-role="{{ r.role|default:'' }}"
+        class="group relative rounded-3xl overflow-hidden bg-brand-black aspect-[9/14] cursor-pointer shadow-[0_10px_30px_rgba(10,10,10,.12)] hover:shadow-[0_20px_50px_rgba(10,10,10,.25)] transition-all duration-500 hover:-translate-y-1.5"
+      >
+        <video
+          data-rev-video
+          {% if r.poster %}poster="{{ r.poster.url }}"{% endif %}
+          src="{{ r.video.url }}"
+          muted playsinline preload="metadata" loop autoplay
+          class="absolute inset-0 w-full h-full object-cover"></video>
+
+        <!-- Затемнение снизу -->
+        <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/85 to-transparent pointer-events-none"></div>
+
+        <!-- Имя + Verified -->
+        <div class="absolute inset-x-0 bottom-0 p-4 flex items-end justify-between gap-2">
+          <div class="min-w-0">
+            <p class="text-white font-bold text-sm truncate">{{ r.name }}</p>
+            {% if r.role %}
+            <p class="text-white/60 text-[11px] mt-0.5 truncate">{{ r.role }}</p>
+            {% endif %}
+          </div>
+
+          {% if r.is_verified %}
+          <span class="shrink-0 w-7 h-7 grid place-items-center rounded-full bg-brand-yellow text-brand-black">
+            <i class="fa-solid fa-check text-xs"></i>
+          </span>
+          {% endif %}
+        </div>
+
+        <!-- Иконка mute/unmute в правом верхнем углу -->
+        <button
+          data-rev-toggle
+          aria-label="Ovoz"
+          class="absolute top-3 right-3 w-9 h-9 grid place-items-center rounded-full bg-black/40 backdrop-blur-md text-white hover:bg-brand-yellow hover:text-brand-black transition-all duration-300 z-10"
+        >
+          <i data-rev-icon class="fa-solid fa-volume-xmark text-xs"></i>
+        </button>
+
+        <!-- Иконка «развернуть» по центру при hover -->
+        <div class="absolute inset-0 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <span class="w-14 h-14 grid place-items-center rounded-full bg-white/20 backdrop-blur-md text-white">
+            <i class="fa-solid fa-expand text-lg"></i>
+          </span>
+        </div>
+      </article>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ LIGHTBOX (большое видео) ============ -->
+<div id="revLightbox" class="fixed inset-0 z-[100] hidden items-center justify-center opacity-0 transition-opacity duration-300"
+  style="background: rgba(10,10,10,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+
+  <!-- Кнопка закрытия -->
+  <button id="revLbClose" aria-label="Yopish"
+    class="absolute top-5 right-5 md:top-8 md:right-8 w-12 h-12 md:w-14 md:h-14 grid place-items-center rounded-full bg-white/10 hover:bg-brand-yellow hover:text-brand-black text-white text-xl transition-all duration-300 z-10">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
+  <!-- Кнопка mute/unmute в модалке -->
+  <button id="revLbMute" aria-label="Ovoz"
+    class="absolute top-5 left-5 md:top-8 md:left-8 w-12 h-12 md:w-14 md:h-14 grid place-items-center rounded-full bg-white/10 hover:bg-brand-yellow hover:text-brand-black text-white text-lg transition-all duration-300 z-10">
+    <i id="revLbMuteIcon" class="fa-solid fa-volume-high"></i>
+  </button>
+
+  <!-- Контейнер видео -->
+  <div class="relative max-w-[92vw] max-h-[88vh] rounded-3xl overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,.7)]">
+    <video id="revLbVideo"
+      class="block w-auto h-auto max-w-[92vw] max-h-[88vh] bg-black"
+      playsinline controls autoplay loop></video>
+
+    <!-- Подпись внизу -->
+    <div class="absolute inset-x-0 bottom-0 p-5 md:p-6 bg-gradient-to-t from-black/90 to-transparent pointer-events-none">
+      <p id="revLbName" class="text-white font-bold text-lg md:text-xl"></p>
+      <p id="revLbRole" class="text-white/60 text-sm mt-1"></p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ============ PAYMENT PROOFS ============ -->
+{% if proofs %}
+<section class="relative bg-brand-graySoft/60 border-y border-black/5 py-16 md:py-24">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
+
+    <div class="max-w-[720px] mb-12">
+      <span class="inline-flex items-center gap-2 text-brand-yellowDark font-semibold text-sm mb-3">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>
+        {% trans "To‘lov cheklari" %}
+      </span>
+
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.05]">
+        {% trans "Real" %} <span class="text-brand-yellow">{% trans "skrinshotlar" %}</span>
+      </h2>
+
+      <p class="mt-4 text-base md:text-lg text-brand-gray leading-relaxed">
+        {% trans "Har bir to‘lov tasdiqlangan. Bosib, kattalashtirib ko‘rishingiz mumkin." %}
+      </p>
+    </div>
+
+    <div id="proofGallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+
+      {% for p in proofs %}
+      <button data-proof-img="{{ p.image.url }}"
+        class="proof-card group relative rounded-2xl md:rounded-3xl overflow-hidden bg-white border border-black/5 aspect-[3/4] text-left">
+        <img src="{{ p.image.url }}" alt="{{ p.title }}"
+          loading="lazy" decoding="async"
+          class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+        <div class="absolute inset-x-0 bottom-0 p-3 md:p-4 bg-gradient-to-t from-black/80 to-transparent">
+          <p class="text-white text-xs md:text-sm font-bold">{{ p.title }}</p>
+          {% if p.subtitle %}
+          <p class="text-white/60 text-[10px] md:text-xs mt-0.5">{{ p.subtitle }}</p>
+          {% endif %}
+        </div>
+        <div class="absolute inset-0 bg-brand-yellow/0 group-hover:bg-brand-yellow/10 transition-colors duration-300"></div>
+      </button>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ============ LIGHTBOX ============ -->
+<div id="proofLightbox" class="fixed inset-0 z-[100] hidden items-center justify-center lb-backdrop opacity-0 transition-opacity duration-300">
+  <button id="proofLbClose" aria-label="Yopish"
+    class="absolute top-5 right-5 w-12 h-12 grid place-items-center rounded-full bg-white/10 hover:bg-white/20 text-white transition">
+    <i class="fa-solid fa-xmark text-xl"></i>
+  </button>
+  <img id="proofLbImg" class="lb-img select-none" alt="">
+</div>
+
+<!-- ============ CTA ============ -->
+<section class="relative py-20 md:py-28 bg-white">
+  <div class="max-w-[900px] mx-auto px-6 lg:px-8 text-center">
+    <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.05]">
+      {% trans "Siz ham" %} <span class="text-brand-yellow">{% trans "boshlashga tayyormisiz?" %}</span>
+    </h2>
+    <p class="mt-5 text-lg text-brand-gray leading-relaxed">
+      {% trans "Ariza qoldiring — 5 daqiqada siz bilan bog‘lanamiz." %}
+    </p>
+    <a href="{% url 'apps:home' %}#contact-form"
+      class="mt-8 inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-brand-yellow text-brand-black text-base font-bold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 transition-all duration-300">
+      <i class="fa-solid fa-paper-plane"></i>
+      {% trans "Ariza qoldirish" %}
+    </a>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================
+     1. ВСЕ видео в галерее — автоплей (muted)
+     Управление только mute/unmute.
+     ========================================================= */
+  const cards = Array.from(document.querySelectorAll("[data-review-card]"));
+
+  cards.forEach((card) => {
+    const v = card.querySelector("[data-rev-video]");
+    if (!v) return;
+    v.muted = true;
+    v.playsInline = true;
+    v.setAttribute("playsinline", "");
+    const p = v.play();
+    if (p && p.catch) p.catch(() => {});
+  });
+
+  /* =========================================================
+     2. MUTE/UNMUTE на карточке
+     Включаешь звук у одной — у остальных автоматически mute.
+     ========================================================= */
+  cards.forEach((card) => {
+    const btn = card.querySelector("[data-rev-toggle]");
+    const icon = card.querySelector("[data-rev-icon]");
+    const v = card.querySelector("[data-rev-video]");
+    if (!btn || !v) return;
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      const willUnmute = v.muted; // если сейчас muted → хотим включить
+
+      cards.forEach((c) => {
+        const cv = c.querySelector("[data-rev-video]");
+        const ci = c.querySelector("[data-rev-icon]");
+        if (!cv) return;
+
+        if (c === card) {
+          cv.muted = !willUnmute;
+          if (ci) {
+            ci.className = cv.muted
+              ? "fa-solid fa-volume-xmark text-xs"
+              : "fa-solid fa-volume-high text-xs";
+          }
+          if (!cv.muted) cv.play().catch(() => {});
+        } else {
+          cv.muted = true;
+          if (ci) ci.className = "fa-solid fa-volume-xmark text-xs";
+        }
+      });
+    });
+  });
+
+  /* =========================================================
+     3. LIGHTBOX — клик по карточке открывает большое видео
+     ========================================================= */
+  const lb = document.getElementById("revLightbox");
+  const lbVideo = document.getElementById("revLbVideo");
+  const lbClose = document.getElementById("revLbClose");
+  const lbMute = document.getElementById("revLbMute");
+  const lbMuteIcon = document.getElementById("revLbMuteIcon");
+  const lbName = document.getElementById("revLbName");
+  const lbRole = document.getElementById("revLbRole");
+
+  let lbUserMuted = false;
+
+  const openLb = (card) => {
+    if (!lb || !lbVideo) return;
+
+    const src = card.dataset.video;
+    const name = card.dataset.name || "";
+    const role = card.dataset.role || "";
+
+    lbVideo.src = src;
+    lbVideo.muted = false;       // в модалке включаем звук сразу
+    lbVideo.volume = 1;
+    lbUserMuted = false;
+    if (lbMuteIcon) lbMuteIcon.className = "fa-solid fa-volume-high";
+
+    if (lbName) lbName.textContent = name;
+    if (lbRole) lbRole.textContent = role;
+
+    lb.classList.remove("hidden");
+    lb.classList.add("flex");
+    document.body.style.overflow = "hidden";
+
+    requestAnimationFrame(() => {
+      lb.classList.remove("opacity-0");
+      const p = lbVideo.play();
+      if (p && p.catch) {
+        p.catch(() => {
+          // Браузер блокирует звук — играем в mute
+          lbVideo.muted = true;
+          lbUserMuted = true;
+          if (lbMuteIcon) lbMuteIcon.className = "fa-solid fa-volume-xmark";
+          lbVideo.play().catch(() => {});
+        });
+      }
+    });
+  };
+
+  const closeLb = () => {
+    if (!lb || !lbVideo) return;
+    lb.classList.add("opacity-0");
+    setTimeout(() => {
+      lb.classList.add("hidden");
+      lb.classList.remove("flex");
+      lbVideo.pause();
+      lbVideo.removeAttribute("src");
+      lbVideo.load();
+    }, 250);
+    document.body.style.overflow = "";
+  };
+
+  cards.forEach((card) => {
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("[data-rev-toggle]")) return; // клик по mute не открывает
+      openLb(card);
+    });
+  });
+
+  lbClose?.addEventListener("click", closeLb);
+  lb?.addEventListener("click", (e) => { if (e.target === lb) closeLb(); });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lb && !lb.classList.contains("hidden")) closeLb();
+  });
+
+  /* ---------- Mute в модалке ---------- */
+  lbMute?.addEventListener("click", () => {
+    if (!lbVideo) return;
+    lbUserMuted = !lbUserMuted;
+    lbVideo.muted = lbUserMuted;
+    if (lbMuteIcon) {
+      lbMuteIcon.className = lbUserMuted
+        ? "fa-solid fa-volume-xmark"
+        : "fa-solid fa-volume-high";
+    }
+    if (!lbUserMuted) lbVideo.play().catch(() => {});
+  });
+
+  /* =========================================================
+     4. Пауза всех видео, когда вкладка неактивна
+     ========================================================= */
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      cards.forEach((c) => {
+        const v = c.querySelector("[data-rev-video]");
+        if (v && !v.paused) v.pause();
+      });
+      if (lbVideo && !lbVideo.paused) lbVideo.pause();
+    } else {
+      cards.forEach((c) => {
+        const v = c.querySelector("[data-rev-video]");
+        if (v) v.play().catch(() => {});
+      });
+      if (lbVideo && lb && !lb.classList.contains("hidden")) {
+        lbVideo.play().catch(() => {});
+      }
+    }
+  });
+
+})();
+</script>
+{% endblock %}

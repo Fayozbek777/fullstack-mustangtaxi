@@ -1,17 +1,22 @@
 {% load static %}
+{% load i18n %}
 <!doctype html>
-<html lang="uz">
+<html lang="{{ LANGUAGE_CODE|default:'uz' }}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffd700" />
-    <meta
-      name="description"
-      content="Mustang — Toshkent bo'ylab skuter, velosiped va sumkalarni bir necha soniyada ijaraga oling."
-    />
-    <title>{% block title %}Mustang Taxi{% endblock %}</title>
+    <meta name="description" content="{% trans "Mustang — Toshkent bo'ylab skuter, velosiped va sumkalarni bir necha soniyada ijaraga oling." %}" />
+ 
+    <link rel="icon" type="image/svg+xml"       href="{% static 'assets/nav-logo.png' %}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/nav-logo.png' %}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/nav-logo.png' %}" />
+    <link rel="apple-touch-icon" sizes="180x180"    href="{% static 'assets/nav-logo.png' %}" />
+    <meta name="theme-color" content="#ffd700" />
 
-    <!-- Tailwind + config -->
+
+    <title>{% block title %}{% trans "Mustang Taxi" %}{% endblock %}</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -28,14 +33,7 @@
               },
             },
             fontFamily: {
-              sans: [
-                "Inter",
-                "system-ui",
-                "-apple-system",
-                "Segoe UI",
-                "Roboto",
-                "sans-serif",
-              ],
+              sans: ["Inter", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
             },
             boxShadow: {
               soft: "0 2px 8px rgba(10,10,10,0.06)",
@@ -59,18 +57,12 @@
     </script>
 
     <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
     <!-- Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
     <!-- Свой CSS -->
     <link rel="stylesheet" href="{% static 'css/index.css' %}" />
@@ -78,214 +70,139 @@
     {% block extra_head %}{% endblock %}
   </head>
 
-  <body
-    class="font-sans bg-white text-brand-black antialiased flex flex-col min-h-screen"
-  >
+  <body class="font-sans bg-white text-brand-black antialiased flex flex-col min-h-screen">
+
     <!-- ============ NAVBAR ============ -->
-    <header
-      id="navbar"
-      class="sticky top-0 z-40 bg-white/85 backdrop-blur-xl backdrop-saturate-150 border-b border-transparent transition-all duration-300 animate-navIn"
-    >
-      <div
-        class="max-w-[1400px] mx-auto px-6 lg:px-8 h-[88px] flex items-center gap-8"
-      >
+    <header id="navbar" class="sticky top-0 z-40 bg-white/85 backdrop-blur-xl backdrop-saturate-150 border-b border-transparent transition-all duration-300 animate-navIn">
+      <div class="max-w-[1400px] mx-auto px-6 lg:px-8 h-[88px] flex items-center gap-8">
+
         <!-- Logo -->
-        <a
-          data-nav="logo"
-          href="/"
-          class="flex items-center gap-3 font-extrabold text-2xl tracking-tight shrink-0 group"
-        >
-          <span
-            class="w-12 h-12 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-lg transition-all duration-300 group-hover:rotate-[-10deg] group-hover:scale-110 shadow-glow"
-          >
-            <i class="fa-solid fa-bolt"></i>
-          </span>
-          <span>Mustang</span>
-        </a>
+       <a data-nav="logo" href="/" class="flex items-center gap-3 font-extrabold text-2xl tracking-tight shrink-0 group" aria-label="Mustang — bosh sahifa">
+  <span class="w-12 h-12 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black shadow-glow transition-all duration-300 group-hover:rotate-[-10deg] group-hover:scale-110 overflow-hidden">
+    <img
+      src="{% static 'assets/nav-logo.png' %}"
+      alt="Mustang logo"
+      width="48"
+      height="48"
+      draggable="false"
+      loading="eager"
+      decoding="async"
+    />
+  </span>
+  <span>Mustang Pro</span>
+</a>
 
         <!-- Desktop Nav -->
         <nav class="hidden lg:flex flex-1">
           <ul class="flex items-center gap-2">
             <li>
-              <a
-                href="{% url 'apps:home' %}"
-                class="nav-link relative inline-flex items-center px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300"
-              >
-                Bosh Sahifa
+              <a href="{% url 'apps:home' %}" class="nav-link relative inline-flex items-center px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300">
+                {% trans "Bosh Sahifa" %}
               </a>
             </li>
 
             <!-- Dropdown Skooterlar -->
             <li class="relative" id="dropdownScooters">
-              <button
-                id="dropdownToggle"
-                aria-haspopup="true"
-                aria-expanded="false"
-                class="nav-link inline-flex items-center gap-2 px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300"
-              >
-                Skooterlar
-                <i
-                  id="chevron"
-                  class="fa-solid fa-chevron-down text-xs transition-transform duration-300"
-                ></i>
+              <button id="dropdownToggle" aria-haspopup="true" aria-expanded="false"
+                      class="nav-link inline-flex items-center gap-2 px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300">
+                {% trans "Skooterlar" %}
+                <i id="chevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
               </button>
 
-              <div
-                id="dropdownMenu"
-                class="absolute top-[calc(100%+14px)] left-0 w-[360px] origin-top opacity-0 scale-95 -translate-y-2 pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
-              >
-                <div
-                  class="bg-white rounded-3xl shadow-hover border border-black/5 p-3"
-                >
-                  <a
-                    href="{% url 'apps:scooters' %}" 
-                    class="flex items-start gap-4 p-4 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200 group"
-                  >
-                    <span
-                      class="w-12 h-12 shrink-0 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]"
-                    >
+              <div id="dropdownMenu" class="absolute top-[calc(100%+14px)] left-0 w-[360px] origin-top opacity-0 scale-95 -translate-y-2 pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
+                <div class="bg-white rounded-3xl shadow-hover border border-black/5 p-3">
+
+                  <a href="{% url 'apps:scooters' %}" class="flex items-start gap-4 p-4 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200 group">
+                    <span class="w-12 h-12 shrink-0 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]">
                       <i class="fa-solid fa-bolt"></i>
                     </span>
                     <span class="flex flex-col">
                       <span class="font-semibold text-base">Mustang Scooter</span>
-                      <span class="text-sm text-brand-gray"
-                        >Elektroskuter, 45 km/soat</span
-                      >
+                      <span class="text-sm text-brand-gray">{% trans "Elektroskuter, 45 km/soat" %}</span>
                     </span>
                   </a>
 
-                  <a
-                      href="{% url 'apps:scooters' %}" 
-                    class="flex items-start gap-4 p-4 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200 group"
-                  >
-                    <span
-                      class="w-12 h-12 shrink-0 grid place-items-center rounded-2xl bg-brand-black text-brand-yellow text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]"
-                    >
+                  <a href="{% url 'apps:scooters' %}" class="flex items-start gap-4 p-4 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200 group">
+                    <span class="w-12 h-12 shrink-0 grid place-items-center rounded-2xl bg-brand-black text-brand-yellow text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]">
                       <i class="fa-solid fa-gauge-high"></i>
                     </span>
                     <span class="flex flex-col">
                       <span class="font-semibold text-base">Mustang Drongo Scooter</span>
-                      <span class="text-sm text-brand-gray"
-                        >Maksimal quvvat</span
-                      >
+                      <span class="text-sm text-brand-gray">{% trans "Maksimal quvvat" %}</span>
                     </span>
                   </a>
- 
+
                 </div>
               </div>
             </li>
-
-            <li>
-              <a
-                 href="{% url 'apps:bicycles' %}" 
-                class="nav-link relative inline-flex items-center px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300"
-              >
-                Velosipedlar
+<li>
+              <a href="{% url 'apps:cars' %}" class="nav-link relative inline-flex items-center px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300">
+                {% trans "Elektrocar" %}
               </a>
             </li>
             <li>
-              <a
-                href="{% url 'apps:bags' %}" class="nav-link relative inline-flex items-center px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300"
-              >
-                Sumkalar
+              <a href="{% url 'apps:bicycles' %}" class="nav-link relative inline-flex items-center px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300">
+                {% trans "Velosipedlar" %}
               </a>
             </li>
+            <li>
+              <a href="{% url 'apps:bags' %}" class="nav-link relative inline-flex items-center px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300">
+                {% trans "Sumkalar" %}
+              </a>
+            </li>
+            <li>
+  <a href="{% url 'apps:proof' %}" class="nav-link relative inline-flex items-center px-4 py-3 rounded-full text-base font-medium text-brand-gray hover:text-brand-black hover:bg-brand-graySoft transition-all duration-300">
+    {% trans "Isbotlar" %}
+  </a>
+</li>
           </ul>
         </nav>
 
         <!-- Right side -->
         <div class="ml-auto flex items-center gap-3 lg:gap-4">
+
           <!-- Language switcher -->
           <div class="relative" id="lang">
-            <button
-              id="langToggle"
-              aria-haspopup="true"
-              aria-expanded="false"
-              class="flex items-center gap-2.5 pl-3 pr-4 py-2.5 rounded-full border border-black/10 hover:border-brand-yellow hover:bg-brand-graySoft transition-all duration-300"
-            >
+            <button id="langToggle" aria-haspopup="true" aria-expanded="false"
+                    class="flex items-center gap-2.5 pl-3 pr-4 py-2.5 rounded-full border border-black/10 hover:border-brand-yellow hover:bg-brand-graySoft transition-all duration-300">
               <span id="langFlag" class="text-xl leading-none">🇺🇿</span>
-              <span
-                id="langCode"
-                class="text-base font-semibold hidden sm:inline"
-                >UZ</span
-              >
-              <i
-                id="langChevron"
-                class="fa-solid fa-chevron-down text-xs text-brand-gray transition-transform duration-300"
-              ></i>
+              <span id="langCode" class="text-base font-semibold hidden sm:inline">UZ</span>
+              <i id="langChevron" class="fa-solid fa-chevron-down text-xs text-brand-gray transition-transform duration-300"></i>
             </button>
 
-            <ul
-              id="langMenu"
-              class="absolute top-[calc(100%+14px)] right-0 w-[240px] bg-white rounded-3xl shadow-hover border border-black/5 p-2 origin-top-right opacity-0 scale-95 -translate-y-2 pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] z-50"
-            >
+            <ul id="langMenu" class="absolute top-[calc(100%+14px)] right-0 w-[240px] bg-white rounded-3xl shadow-hover border border-black/5 p-2 origin-top-right opacity-0 scale-95 -translate-y-2 pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] z-50">
               <li>
-                <button
-                  data-lang="uz"
-                  data-flag="🇺🇿"
-                  data-code="UZ"
-                  class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200"
-                >
+                <button data-lang="uz" data-flag="🇺🇿" data-code="UZ" class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200">
                   <span class="text-xl">🇺🇿</span>
-                  <span class="text-base font-medium flex-1 text-left"
-                    >O‘zbekcha</span
-                  >
+                  <span class="text-base font-medium flex-1 text-left">O‘zbekcha</span>
                   <span class="text-xs font-semibold text-brand-gray">UZ</span>
                 </button>
               </li>
               <li>
-                <button
-                  data-lang="ru"
-                  data-flag="🇷🇺"
-                  data-code="RU"
-                  class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200"
-                >
+                <button data-lang="ru" data-flag="🇷🇺" data-code="RU" class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200">
                   <span class="text-xl">🇷🇺</span>
-                  <span class="text-base font-medium flex-1 text-left"
-                    >Русский</span
-                  >
+                  <span class="text-base font-medium flex-1 text-left">Русский</span>
                   <span class="text-xs font-semibold text-brand-gray">RU</span>
                 </button>
               </li>
               <li>
-                <button
-                  data-lang="en"
-                  data-flag="🇬🇧"
-                  data-code="EN"
-                  class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200"
-                >
+                <button data-lang="en" data-flag="🇬🇧" data-code="EN" class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200">
                   <span class="text-xl">🇬🇧</span>
-                  <span class="text-base font-medium flex-1 text-left"
-                    >English</span
-                  >
+                  <span class="text-base font-medium flex-1 text-left">English</span>
                   <span class="text-xs font-semibold text-brand-gray">EN</span>
                 </button>
               </li>
               <li>
-                <button
-                  data-lang="hi"
-                  data-flag="🇮🇳"
-                  data-code="HI"
-                  class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200"
-                >
+                <button data-lang="hi" data-flag="🇮🇳" data-code="HI" class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200">
                   <span class="text-xl">🇮🇳</span>
-                  <span class="text-base font-medium flex-1 text-left"
-                    >हिन्दी</span
-                  >
+                  <span class="text-base font-medium flex-1 text-left">हिन्दी</span>
                   <span class="text-xs font-semibold text-brand-gray">HI</span>
                 </button>
               </li>
               <li>
-                <button
-                  data-lang="ur"
-                  data-flag="🇵🇰"
-                  data-code="UR"
-                  class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200"
-                >
+                <button data-lang="ur" data-flag="🇵🇰" data-code="UR" class="lang-item w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-brand-graySoft transition-colors duration-200">
                   <span class="text-xl">🇵🇰</span>
-                  <span class="text-base font-medium flex-1 text-left"
-                    >اردو</span
-                  >
+                  <span class="text-base font-medium flex-1 text-left">اردو</span>
                   <span class="text-xs font-semibold text-brand-gray">UR</span>
                 </button>
               </li>
@@ -293,33 +210,19 @@
           </div>
 
           <!-- CTA -->
-          <a
-            id="ctaBtn"
-            href="#contact-form"
-            class="hidden md:inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-brand-yellow text-brand-black text-base font-semibold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300"
-          >
+          <a id="ctaBtn" href="#contact-form"
+             class="hidden md:inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-brand-yellow text-brand-black text-base font-semibold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300">
             <i class="fa-solid fa-paper-plane"></i>
-            <span>Ariza Topshirish</span>
+            <span>{% trans "Ariza Topshirish" %}</span>
           </a>
 
           <!-- Burger -->
-          <button
-            id="burger"
-            aria-label="Menu"
-            aria-expanded="false"
-            aria-controls="sidePanel"
-            class="lg:hidden w-12 h-12 grid place-items-center rounded-full hover:bg-brand-graySoft transition-colors duration-200"
-          >
+          <button id="burger" aria-label="{% trans 'Menyu' %}" aria-expanded="false" aria-controls="sidePanel"
+                  class="lg:hidden w-12 h-12 grid place-items-center rounded-full hover:bg-brand-graySoft transition-colors duration-200">
             <div class="w-6 h-5 relative">
-              <span
-                class="burger-line absolute left-0 top-0 w-full h-0.5 bg-brand-black rounded-full transition-all duration-300"
-              ></span>
-              <span
-                class="burger-line absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-brand-black rounded-full transition-all duration-300"
-              ></span>
-              <span
-                class="burger-line absolute left-0 bottom-0 w-full h-0.5 bg-brand-black rounded-full transition-all duration-300"
-              ></span>
+              <span class="burger-line absolute left-0 top-0 w-full h-0.5 bg-brand-black rounded-full transition-all duration-300"></span>
+              <span class="burger-line absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-brand-black rounded-full transition-all duration-300"></span>
+              <span class="burger-line absolute left-0 bottom-0 w-full h-0.5 bg-brand-black rounded-full transition-all duration-300"></span>
             </div>
           </button>
         </div>
@@ -327,35 +230,19 @@
     </header>
 
     <!-- ============ MOBILE OFF-CANVAS ============ -->
-    <div
-      id="overlay"
-      class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden opacity-0 pointer-events-none transition-opacity duration-300"
-    ></div>
+    <div id="overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden opacity-0 pointer-events-none transition-opacity duration-300"></div>
 
-    <aside
-      id="sidePanel"
-      class="fixed top-0 right-0 h-full w-[360px] max-w-[88vw] bg-white z-50 lg:hidden translate-x-full transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[-20px_0_60px_rgba(10,10,10,0.12)] flex flex-col border-l border-black/5"
-    >
-      <div
-        class="flex items-center justify-between px-6 h-[88px] border-b border-black/5 shrink-0"
-      >
-        <a
-          href="/"
-          class="flex items-center gap-3 font-extrabold text-xl tracking-tight"
-        >
-          <span
-            class="w-11 h-11 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-base"
-          >
+    <aside id="sidePanel" class="fixed top-0 right-0 h-full w-[360px] max-w-[88vw] bg-white z-50 lg:hidden translate-x-full transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[-20px_0_60px_rgba(10,10,10,0.12)] flex flex-col border-l border-black/5">
+
+      <div class="flex items-center justify-between px-6 h-[88px] border-b border-black/5 shrink-0">
+        <a href="/" class="flex items-center gap-3 font-extrabold text-xl tracking-tight">
+          <span class="w-11 h-11 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-base">
             <i class="fa-solid fa-bolt"></i>
           </span>
           <span>Mustang</span>
         </a>
 
-        <button
-          id="closePanel"
-          aria-label="Close menu"
-          class="w-11 h-11 grid place-items-center rounded-full hover:bg-brand-graySoft transition-colors duration-200"
-        >
+        <button id="closePanel" aria-label="{% trans 'Yopish' %}" class="w-11 h-11 grid place-items-center rounded-full hover:bg-brand-graySoft transition-colors duration-200">
           <i class="fa-solid fa-xmark text-xl"></i>
         </button>
       </div>
@@ -363,39 +250,23 @@
       <div class="flex-1 overflow-y-auto px-6 py-6">
         <ul class="flex flex-col gap-1.5">
           <li>
-            <a
-              href="{% url 'apps:home' %}"
-              class="block px-5 py-4 rounded-2xl text-base font-medium hover:bg-brand-graySoft hover:text-brand-black transition-colors"
-            >
-              Bosh Sahifa
+            <a href="{% url 'apps:home' %}" class="block px-5 py-4 rounded-2xl text-base font-medium hover:bg-brand-graySoft hover:text-brand-black transition-colors">
+              {% trans "Bosh Sahifa" %}
             </a>
           </li>
 
           <li>
-            <button
-              id="mobileDropdownToggle"
-              aria-expanded="false"
-              class="w-full flex items-center justify-between px-5 py-4 rounded-2xl text-base font-medium hover:bg-brand-graySoft hover:text-brand-black transition-colors"
-            >
-              <span>Skooterlar</span>
-              <i
-                id="mobileChevron"
-                class="fa-solid fa-chevron-down text-xs transition-transform duration-300"
-              ></i>
+            <button id="mobileDropdownToggle" aria-expanded="false"
+                    class="w-full flex items-center justify-between px-5 py-4 rounded-2xl text-base font-medium hover:bg-brand-graySoft hover:text-brand-black transition-colors">
+              <span>{% trans "Skooterlar" %}</span>
+              <i id="mobileChevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
             </button>
 
-            <div
-              id="mobileDropdown"
-              class="overflow-hidden max-h-0 transition-[max-height] duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
-            >
+            <div id="mobileDropdown" class="overflow-hidden max-h-0 transition-[max-height] duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]">
               <div class="pt-1 pb-2 flex flex-col gap-1.5">
-                <a
-                  href="#services"
-                  class="flex items-center gap-4 px-4 py-3.5 ml-3 rounded-2xl hover:bg-brand-graySoft transition-colors group"
-                >
-                  <span
-                    class="w-11 h-11 shrink-0 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]"
-                  >
+
+                <a href="{% url 'apps:scooters' %}" class="flex items-center gap-4 px-4 py-3.5 ml-3 rounded-2xl hover:bg-brand-graySoft transition-colors group">
+                  <span class="w-11 h-11 shrink-0 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]">
                     <i class="fa-solid fa-bolt"></i>
                   </span>
                   <span class="flex flex-col">
@@ -404,63 +275,44 @@
                   </span>
                 </a>
 
-                <a
-                  href="#services"
-                  class="flex items-center gap-4 px-4 py-3.5 ml-3 rounded-2xl hover:bg-brand-graySoft transition-colors group"
-                >
-                  <span
-                    class="w-11 h-11 shrink-0 grid place-items-center rounded-2xl bg-brand-black text-brand-yellow transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]"
-                  >
+                <a href="{% url 'apps:scooters' %}" class="flex items-center gap-4 px-4 py-3.5 ml-3 rounded-2xl hover:bg-brand-graySoft transition-colors group">
+                  <span class="w-11 h-11 shrink-0 grid place-items-center rounded-2xl bg-brand-black text-brand-yellow transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]">
                     <i class="fa-solid fa-gauge-high"></i>
                   </span>
                   <span class="flex flex-col">
                     <span class="text-base font-semibold">Mustang Pro</span>
-                    <span class="text-sm text-brand-gray">Maksimum</span>
+                    <span class="text-sm text-brand-gray">{% trans "Maksimum" %}</span>
                   </span>
                 </a>
 
-                <a
-                  href="#services"
-                  class="flex items-center gap-4 px-4 py-3.5 ml-3 rounded-2xl hover:bg-brand-graySoft transition-colors group"
-                >
-                  <span
-                    class="w-11 h-11 shrink-0 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-6deg]"
-                  >
-                    <i class="fa-solid fa-leaf"></i>
-                  </span>
-                  <span class="flex flex-col">
-                    <span class="text-base font-semibold">Mustang Lite</span>
-                    <span class="text-sm text-brand-gray">Yengil</span>
-                  </span>
-                </a>
+            
               </div>
             </div>
           </li>
 
           <li>
-            <a
-            href="{% url 'apps:bicycles' %}" 
-              class="block px-5 py-4 rounded-2xl text-base font-medium hover:bg-brand-graySoft hover:text-brand-black transition-colors"
-              >Velosipedlar</a
-            >
+            <a href="{% url 'apps:bicycles' %}" class="block px-5 py-4 rounded-2xl text-base font-medium hover:bg-brand-graySoft hover:text-brand-black transition-colors">
+              {% trans "Velosipedlar" %}
+            </a>
           </li>
           <li>
-            <a
-             href="{% url 'apps:bags' %}" 
-              class="block px-5 py-4 rounded-2xl text-base font-medium hover:bg-brand-graySoft hover:text-brand-black transition-colors"
-              >Sumkalar</a
-            >
+            <a href="{% url 'apps:bags' %}" class="block px-5 py-4 rounded-2xl text-base font-medium hover:bg-brand-graySoft hover:text-brand-black transition-colors">
+              {% trans "Sumkalar" %}
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'apps:proof' %}" class="block px-5 py-4 rounded-2xl text-base font-medium hover:bg-brand-graySoft hover:text-brand-black transition-colors">
+    {% trans "Isbotlar" %}
+            </a>
           </li>
         </ul>
       </div>
 
       <div class="p-6 border-t border-black/5 shrink-0">
-        <a
-          href="#contact-form"
-          class="flex items-center justify-center gap-2.5 w-full px-6 py-4 rounded-full bg-brand-yellow text-brand-black text-base font-semibold shadow-glow hover:bg-brand-yellowDark active:scale-[0.98] transition-all duration-200"
-        >
+        <a href="{% url 'apps:home' %}#contact-form"
+           class="flex items-center justify-center gap-2.5 w-full px-6 py-4 rounded-full bg-brand-yellow text-brand-black text-base font-semibold shadow-glow hover:bg-brand-yellowDark active:scale-[0.98] transition-all duration-200">
           <i class="fa-solid fa-paper-plane"></i>
-          Ariza Topshirish
+          {% trans "Ariza Topshirish" %}
         </a>
       </div>
     </aside>
@@ -471,114 +323,83 @@
     <!-- ============ FOOTER ============ -->
     <footer class="bg-brand-black text-white">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-8 pt-20 pb-10">
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8"
-        >
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+
           <!-- Brand -->
           <div class="lg:col-span-1">
-            <a
-              href="/"
-              class="flex items-center gap-3 font-extrabold text-2xl tracking-tight mb-5"
-            >
-              <span
-                class="w-11 h-11 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-base"
-              >
+            <a href="/" class="flex items-center gap-3 font-extrabold text-2xl tracking-tight mb-5">
+              <span class="w-11 h-11 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-base">
                 <i class="fa-solid fa-bolt"></i>
               </span>
-              <span>Mustang</span>
+              <span>Mustang Pro</span>
             </a>
             <p class="text-white/60 text-base leading-relaxed max-w-[280px]">
-              Toshkent bo‘ylab skuter, velosiped va sumkalarni bir necha
-              soniyada ijaraga oling.
+              {% trans "Toshkent bo‘ylab skuter, velosiped va sumkalarni bir necha soniyada ijaraga oling." %}
             </p>
             <div class="flex items-center gap-3 mt-6">
-              <a
-                href="#"
-                aria-label="Instagram"
-                class="w-11 h-11 grid place-items-center rounded-full bg-white/5 hover:bg-brand-yellow hover:text-brand-black transition-colors duration-300"
-              >
+              <a href="https://www.instagram.com/mustangtekin/" aria-label="Instagram" class="w-11 h-11 grid place-items-center rounded-full bg-white/5 hover:bg-brand-yellow hover:text-brand-black transition-colors duration-300">
                 <i class="fa-brands fa-instagram"></i>
               </a>
-              <a
-                href="#"
-                aria-label="Telegram"
-                class="w-11 h-11 grid place-items-center rounded-full bg-white/5 hover:bg-brand-yellow hover:text-brand-black transition-colors duration-300"
-              >
+              <a href="https://t.me/YandexMustang" aria-label="Telegram" class="w-11 h-11 grid place-items-center rounded-full bg-white/5 hover:bg-brand-yellow hover:text-brand-black transition-colors duration-300">
                 <i class="fa-brands fa-telegram"></i>
-              </a>
-              <a
-                href="#"
-                aria-label="Facebook"
-                class="w-11 h-11 grid place-items-center rounded-full bg-white/5 hover:bg-brand-yellow hover:text-brand-black transition-colors duration-300"
-              >
-                <i class="fa-brands fa-facebook-f"></i>
               </a>
             </div>
           </div>
 
           <!-- Xizmatlar -->
           <div>
-            <h3 class="text-sm font-semibold text-white/50 mb-5">Xizmatlar</h3>
+            <h3 class="text-sm font-semibold text-white/50 mb-5">{% trans "Xizmatlar" %}</h3>
             <ul class="flex flex-col gap-3.5 text-base text-white/80">
               <li>
-                <a
-                  href="#services"
-                  class="hover:text-brand-yellow transition-colors"
-                  >Skuter ijarasi</a
-                >
+                <a href="{% url 'apps:scooters' %}" class="hover:text-brand-yellow transition-colors">
+                  {% trans "Skuter ijarasi" %}
+                </a>
               </li>
               <li>
-                <a
-                  href="#services"
-                  class="hover:text-brand-yellow transition-colors"
-                  >Velosiped ijarasi</a
-                >
+                <a href="{% url 'apps:bicycles' %}" class="hover:text-brand-yellow transition-colors">
+                  {% trans "Velosiped ijarasi" %}
+                </a>
               </li>
               <li>
-                <a
-                  href="#services"
-                  class="hover:text-brand-yellow transition-colors"
-                  >Sumka ijarasi</a
-                >
+                <a href="{% url 'apps:bags' %}" class="hover:text-brand-yellow transition-colors">
+                  {% trans "Sumka ijarasi" %}
+                </a>
               </li>
               <li>
-                <a href="#how" class="hover:text-brand-yellow transition-colors"
-                  >Qanday ishlaydi</a
-                >
+                <a href="{% url 'apps:home' %}#how" class="hover:text-brand-yellow transition-colors">
+                  {% trans "Qanday ishlaydi" %}
+                </a>
               </li>
             </ul>
           </div>
 
           <!-- Kompaniya -->
           <div>
-            <h3 class="text-sm font-semibold text-white/50 mb-5">Kompaniya</h3>
+            <h3 class="text-sm font-semibold text-white/50 mb-5">{% trans "Kompaniya" %}</h3>
             <ul class="flex flex-col gap-3.5 text-base text-white/80">
               <li>
-                <a href="#" class="hover:text-brand-yellow transition-colors"
-                  >Biz haqimizda</a
-                >
+                <a href="{% url 'apps:home' %}#about" class="hover:text-brand-yellow transition-colors">
+                  {% trans "Biz haqimizda" %}
+                </a>
               </li>
               <li>
-                <a href="#" class="hover:text-brand-yellow transition-colors"
-                  >Hamkorlar</a
-                >
+                <a href="{% url 'apps:terms' %}" class="hover:text-brand-yellow transition-colors">
+                  {% trans "Qoidalar" %}
+                </a>
               </li>
               <li>
-                <a href="#" class="hover:text-brand-yellow transition-colors"
-                  >Karyera</a
-                >
+                <a href="{% url 'apps:proof' %}" class="hover:text-brand-yellow transition-colors">
+    {% trans "Isbotlar" %}
+                </a>
               </li>
               <li>
-                <a href="#" class="hover:text-brand-yellow transition-colors"
-                  >Qoidalar</a
-                >
-              </li>
+</li> 
             </ul>
           </div>
 
           <!-- Aloqa -->
           <div>
-            <h3 class="text-sm font-semibold text-white/50 mb-5">Aloqa</h3>
+            <h3 class="text-sm font-semibold text-white/50 mb-5">{% trans "Aloqa" %}</h3>
             <ul class="flex flex-col gap-3.5 text-base text-white/80">
               <li class="flex items-center gap-3">
                 <i class="fa-solid fa-phone text-brand-yellow"></i>
@@ -590,30 +411,100 @@
               </li>
               <li class="flex items-center gap-3">
                 <i class="fa-solid fa-location-dot text-brand-yellow"></i>
-                <span>Toshkent, O‘zbekiston</span>
+                <span>{% trans "Toshkent, O‘zbekiston" %}</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div
-          class="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4"
-        >
+        <div class="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p class="text-white/40 text-sm">
-            © 2026 Mustang. Barcha huquqlar himoyalangan.
+            © 2026 Mustang. {% trans "Barcha huquqlar himoyalangan." %}
           </p>
           <div class="flex items-center gap-6 text-white/40 text-sm">
-            <a
-              href="{% url 'apps:terms' %}"
-              class="hover:text-white transition-colors"
-              >Foydalanish shartlari</a
-            >
+            </a>
+            <a href="{% url 'apps:terms' %}" class="hover:text-white transition-colors">
+              {% trans "Foydalanish shartlari" %}
+            </a>
           </div>
         </div>
       </div>
-    </footer>
+       </footer>
+
+    <!-- ============ SCROLL TO TOP ============ -->
+    <button
+      id="scrollTopBtn"
+      aria-label="{% trans 'Yuqoriga' %}"
+      class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 w-12 h-12 md:w-14 md:h-14 grid place-items-center rounded-full bg-brand-yellow text-brand-black shadow-[0_12px_35px_rgba(255,215,0,.45)] opacity-0 translate-y-4 pointer-events-none hover:bg-brand-yellowDark hover:-translate-y-1 active:translate-y-0 transition-all duration-300"
+    >
+      <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 56 56" fill="none">
+        <circle cx="28" cy="28" r="25" stroke="rgba(10,10,10,.12)" stroke-width="3"></circle>
+        <circle
+          id="scrollTopProgress"
+          cx="28" cy="28" r="25"
+          stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"
+          stroke-dasharray="157"
+          stroke-dashoffset="157"
+          style="transition: stroke-dashoffset .15s linear;"
+        ></circle>
+      </svg>
+      <i class="fa-solid fa-arrow-up text-base md:text-lg relative z-10"></i>
+    </button>
+
+    <!-- ============ SCROLL TO TOP SCRIPT ============ -->
+    <script>
+      (function () {
+        "use strict";
+
+        var btn = document.getElementById("scrollTopBtn");
+        if (!btn) return;
+
+        var progress = document.getElementById("scrollTopProgress");
+        var CIRC = 2 * Math.PI * 25; // ≈ 157.08
+        var ticking = false;
+
+        function update() {
+          ticking = false;
+          var scrollY = window.scrollY || window.pageYOffset;
+          var docH = document.documentElement.scrollHeight - window.innerHeight;
+          var ratio = docH > 0 ? Math.min(scrollY / docH, 1) : 0;
+
+          if (scrollY > 400) {
+            btn.classList.remove("opacity-0", "translate-y-4", "pointer-events-none");
+            btn.classList.add("opacity-100", "translate-y-0");
+          } else {
+            btn.classList.add("opacity-0", "translate-y-4", "pointer-events-none");
+            btn.classList.remove("opacity-100", "translate-y-0");
+          }
+
+          if (progress) {
+            progress.style.strokeDashoffset = String(CIRC * (1 - ratio));
+          }
+        }
+
+        function onScroll() {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll, { passive: true });
+
+        btn.addEventListener("click", function () {
+          var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          window.scrollTo({
+            top: 0,
+            behavior: reduce ? "auto" : "smooth"
+          });
+        });
+
+        update();
+      })();
+    </script>
 
     <script type="module" src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/lead.js' %}" defer></script>
     {% block extra_js %}{% endblock %}
   </body>
 </html>

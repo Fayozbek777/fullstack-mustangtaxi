@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Mustang Taxi{% endblock %}
+{% block title %}{% trans "Mustang Taxi" %}{% endblock %}
 
 {% block content %}
 
@@ -10,144 +11,100 @@
   id="hero"
   class="relative min-h-screen overflow-hidden bg-brand-black text-white"
 >
-  <!-- VIDEO -->
   <video
     data-hero-video
     class="absolute inset-0 h-full w-full object-cover scale-[1.02]"
     src="{% static 'media/medium.mp4' %}"
-    autoplay
-    muted
-    loop
-    playsinline
-    preload="auto"
-    aria-hidden="true"
+    autoplay muted loop playsinline preload="auto" aria-hidden="true"
   ></video>
 
-  <!-- Лёгкое затемнение -->
   <div class="absolute inset-0 bg-brand-black/40"></div>
 
-  <!-- Radial затемнение под текстом -->
-  <div
-    aria-hidden="true"
-    class="absolute inset-0"
-    style="
-      background: radial-gradient(
-        ellipse 85% 75% at 30% 55%,
-        rgba(10,10,10,0.75) 0%,
-        rgba(10,10,10,0.45) 40%,
-        rgba(10,10,10,0.15) 70%,
-        transparent 100%
-      );
-    "
+  <div aria-hidden="true" class="absolute inset-0"
+    style="background: radial-gradient(ellipse 85% 75% at 30% 55%, rgba(10,10,10,0.75) 0%, rgba(10,10,10,0.45) 40%, rgba(10,10,10,0.15) 70%, transparent 100%);"
   ></div>
 
-  <!-- Top fade -->
   <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-brand-black/70 to-transparent"></div>
-
-  <!-- Bottom fade -->
   <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-brand-black to-transparent"></div>
 
-  <!-- DOT GRID -->
-  <div
-    aria-hidden="true"
-    class="pointer-events-none absolute inset-0 opacity-[0.22]"
-    style="
-      background-image: radial-gradient(#ffd700 1px, transparent 1px);
-      background-size: 32px 32px;
-      mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 90%);
-      -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 90%);
-    "
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 opacity-[0.22]"
+    style="background-image: radial-gradient(#ffd700 1px, transparent 1px); background-size: 32px 32px; mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 90%); -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 30%, transparent 90%);"
   ></div>
 
-  <!-- Floating icons -->
-  <i data-float class="fa-solid fa-bolt absolute top-[14%] left-[6%] text-5xl text-brand-yellow/70 rotate-[-12deg]" aria-hidden="true"></i>
-  <i data-float class="fa-solid fa-scooter absolute bottom-[18%] left-[10%] text-5xl text-brand-yellow/40 rotate-[8deg]" aria-hidden="true"></i>
-  <i data-float class="fa-solid fa-location-dot absolute top-[70%] left-[4%] text-4xl text-brand-yellow/50" aria-hidden="true"></i>
+ <div data-parallax-p class="absolute top-[14%] left-[6%]">
+  <i data-float class="fa-solid fa-bolt text-5xl text-brand-yellow/70 rotate-[-12deg]" aria-hidden="true"></i>
+</div>
 
-  <!-- CONTENT -->
+<div data-parallax-p class="absolute bottom-[18%] left-[10%]">
+  <i data-float class="fa-solid fa-scooter text-5xl text-brand-yellow/40 rotate-[8deg]" aria-hidden="true"></i>
+</div>
+
+<div data-parallax-p class="absolute top-[70%] left-[4%]">
+  <i data-float class="fa-solid fa-location-dot text-4xl text-brand-yellow/50" aria-hidden="true"></i>
+</div>
   <div class="relative z-10 mx-auto flex min-h-screen w-full max-w-[1500px] items-center px-5 py-28 sm:px-8 lg:px-12">
     <div class="grid w-full items-center gap-14 lg:grid-cols-[1.15fr_.85fr]">
 
-      <!-- LEFT -->
       <div class="max-w-[820px]">
 
-        <!-- BADGE -->
-        <div
-          data-hero="badge"
-          class="mb-8 inline-flex items-center gap-3 rounded-full border border-brand-yellow/40 bg-brand-yellow/10 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_30px_rgba(255,215,0,0.15)] backdrop-blur-md"
-        >
+        <div data-hero="badge" class="mb-8 inline-flex items-center gap-3 rounded-full border border-brand-yellow/40 bg-brand-yellow/10 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_30px_rgba(255,215,0,0.15)] backdrop-blur-md">
           <span data-pulse class="h-2.5 w-2.5 rounded-full bg-brand-yellow shadow-[0_0_12px_rgba(255,215,0,.9)]"></span>
-          Toshkentda tezkor ijara
+          {% trans "Toshkentda tezkor ijara" %}
         </div>
 
-        <!-- TITLE -->
         <h1 class="text-[54px] font-black leading-[0.92] tracking-[-0.045em] sm:text-7xl md:text-8xl lg:text-[108px]">
-          <span data-word class="block text-white">Xush kelibsiz</span>
-          <span data-word class="mt-2 block text-brand-yellow" style="text-shadow: 0 0 40px rgba(255,215,0,0.35);">
-            My Mustang
-          </span>
+          <span data-word class="block text-white">{% trans "Xush kelibsiz" %}</span>
+          <span data-word class="mt-2 block text-brand-yellow"
+      data-shadow-after="0 0 40px rgba(255,215,0,0.35)">
+  {% trans "My Mustang" %}
+</span>
         </h1>
 
-        <!-- DESCRIPTION -->
-        <p
-          data-hero="subtitle"
-          class="mt-8 max-w-[650px] text-base leading-7 text-white/80 sm:text-lg md:text-xl"
-        >
-          Toshkent bo‘ylab zamonaviy skuter, velosiped va yetkazib berish
-          sumkalarini tez, qulay va ishonchli tarzda ijaraga oling.
+        <p data-hero="subtitle" class="mt-8 max-w-[650px] text-base leading-7 text-white/80 sm:text-lg md:text-xl">
+          {% trans "Toshkent bo‘ylab zamonaviy skuter, velosiped va yetkazib berish sumkalarini tez, qulay va ishonchli tarzda ijaraga oling." %}
         </p>
 
-        <!-- ACTIONS -->
         <div data-hero="actions" class="mt-9 flex flex-col gap-3 sm:flex-row">
-          <a
-            href="#contact-form"
-            id="heroPrimaryCta"
-            class="group inline-flex items-center justify-center gap-3 rounded-2xl bg-brand-yellow px-8 py-4 text-sm font-bold text-brand-black shadow-[0_12px_35px_rgba(255,215,0,.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-brand-yellowDark hover:shadow-[0_16px_45px_rgba(255,215,0,.5)]"
-          >
+          <a href="#contact-form" id="heroPrimaryCta"
+             class="group inline-flex items-center justify-center gap-3 rounded-2xl bg-brand-yellow px-8 py-4 text-sm font-bold text-brand-black shadow-[0_12px_35px_rgba(255,215,0,.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-brand-yellowDark hover:shadow-[0_16px_45px_rgba(255,215,0,.5)]">
             <i class="fa-solid fa-bolt transition-transform duration-300 group-hover:rotate-12"></i>
-            Hoziroq bog‘laning
+            {% trans "Hoziroq bog‘laning" %}
             <i class="fa-solid fa-arrow-right text-xs transition-transform duration-300 group-hover:translate-x-1"></i>
           </a>
 
-          <a
-            href="#how"
-            class="inline-flex items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-brand-yellow/60 hover:bg-white/15"
-          >
+          <a href="#how"
+             class="inline-flex items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-brand-yellow/60 hover:bg-white/15">
             <i class="fa-solid fa-circle-play text-brand-yellow"></i>
-            Qanday ishlaydi?
+            {% trans "Qanday ishlaydi?" %}
           </a>
         </div>
 
-        <!-- STATS -->
         <div data-hero="stats" class="mt-12 flex flex-wrap items-center gap-8">
           <div class="flex flex-col">
             <span class="text-3xl font-extrabold tracking-tight text-brand-yellow">500+</span>
-            <span class="text-xs text-white/60 uppercase tracking-wider mt-1">Mijozlar</span>
+            <span class="text-xs text-white/60 uppercase tracking-wider mt-1">{% trans "Mijozlar" %}</span>
           </div>
           <div class="w-px h-8 bg-white/20"></div>
           <div class="flex flex-col">
             <span class="text-3xl font-extrabold tracking-tight text-brand-yellow">50+</span>
-            <span class="text-xs text-white/60 uppercase tracking-wider mt-1">Skuterlar</span>
+            <span class="text-xs text-white/60 uppercase tracking-wider mt-1">{% trans "Skuterlar" %}</span>
           </div>
           <div class="w-px h-8 bg-white/20"></div>
           <div class="flex flex-col">
             <span class="text-3xl font-extrabold tracking-tight text-brand-yellow">24/7</span>
-            <span class="text-xs text-white/60 uppercase tracking-wider mt-1">Qo‘llab-quvvatlash</span>
+            <span class="text-xs text-white/60 uppercase tracking-wider mt-1">{% trans "Qo‘llab-quvvatlash" %}</span>
           </div>
         </div>
 
       </div>
 
-      <!-- RIGHT CARD -->
       <div class="hidden lg:flex lg:justify-end">
-        <div
-          data-hero="card"
-          class="w-full max-w-[500px] rounded-[40px] border border-white/15 bg-white/10 p-8 shadow-[0_30px_100px_rgba(0,0,0,0.4)] backdrop-blur-xl"
-        >
+        <div data-hero="card"
+             class="w-full max-w-[500px] rounded-[40px] border border-white/15 bg-white/10 p-8 shadow-[0_30px_100px_rgba(0,0,0,0.4)] backdrop-blur-xl">
           <div class="flex items-center justify-between border-b border-white/15 pb-7">
             <div>
-              <p class="text-xs font-bold uppercase tracking-[0.28em] text-white/60">MY MUSTANG</p>
-              <h3 class="mt-2 text-3xl font-extrabold tracking-tight text-white">Sizning yo‘lingiz.</h3>
+              <p class="text-xs font-bold uppercase tracking-[0.28em] text-white/60">{% trans "MY MUSTANG" %}</p>
+              <h3 class="mt-2 text-3xl font-extrabold tracking-tight text-white">{% trans "Sizning yo‘lingiz." %}</h3>
             </div>
             <div class="flex h-16 w-16 items-center justify-center rounded-[20px] bg-brand-yellow text-brand-black shadow-[0_10px_30px_rgba(255,215,0,.4)]">
               <i class="fa-solid fa-scooter text-2xl"></i>
@@ -160,8 +117,8 @@
                 <i class="fa-solid fa-bolt text-lg"></i>
               </div>
               <div>
-                <p class="text-base font-bold text-white">Tez va qulay</p>
-                <p class="mt-1.5 text-sm text-white/60">Buyurtma bir necha daqiqada</p>
+                <p class="text-base font-bold text-white">{% trans "Tez va qulay" %}</p>
+                <p class="mt-1.5 text-sm text-white/60">{% trans "Buyurtma bir necha daqiqada" %}</p>
               </div>
             </div>
 
@@ -170,8 +127,8 @@
                 <i class="fa-solid fa-location-dot text-lg"></i>
               </div>
               <div>
-                <p class="text-base font-bold text-white">Toshkent bo‘ylab</p>
-                <p class="mt-1.5 text-sm text-white/60">Qulay joylashuv va xizmat</p>
+                <p class="text-base font-bold text-white">{% trans "Toshkent bo‘ylab" %}</p>
+                <p class="mt-1.5 text-sm text-white/60">{% trans "Qulay joylashuv va xizmat" %}</p>
               </div>
             </div>
 
@@ -180,22 +137,19 @@
                 <i class="fa-solid fa-shield-halved text-lg"></i>
               </div>
               <div>
-                <p class="text-base font-bold text-white">Ishonchli xizmat</p>
-                <p class="mt-1.5 text-sm text-white/60">Oddiy va tushunarli shartlar</p>
+                <p class="text-base font-bold text-white">{% trans "Ishonchli xizmat" %}</p>
+                <p class="mt-1.5 text-sm text-white/60">{% trans "Oddiy va tushunarli shartlar" %}</p>
               </div>
             </div>
           </div>
 
           <div class="flex items-center justify-between rounded-[22px] bg-brand-yellow/10 border border-brand-yellow/20 p-5">
             <div>
-              <p class="text-sm font-medium text-white/60">My Mustang</p>
-              <p class="mt-1 text-base font-extrabold text-white">Harakatni boshlang</p>
+              <p class="text-sm font-medium text-white/60">{% trans "My Mustang" %}</p>
+              <p class="mt-1 text-base font-extrabold text-white">{% trans "Harakatni boshlang" %}</p>
             </div>
-            <a
-              href="#contact-form"
-              aria-label="Boshlash"
-              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-yellow text-brand-black shadow-[0_8px_20px_rgba(255,215,0,.35)] transition-all duration-300 hover:translate-x-1 hover:rotate-[-45deg]"
-            >
+            <a href="#contact-form" aria-label="{% trans 'Boshlash' %}"
+               class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-yellow text-brand-black shadow-[0_8px_20px_rgba(255,215,0,.35)] transition-all duration-300 hover:translate-x-1 hover:rotate-[-45deg]">
               <i class="fa-solid fa-arrow-right"></i>
             </a>
           </div>
@@ -205,201 +159,116 @@
     </div>
   </div>
 
-  <!-- SCROLL -->
   <div class="absolute bottom-7 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex">
-    <span class="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/50">Scroll</span>
+    <span class="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/50">{% trans "Scroll" %}</span>
     <div class="h-9 w-px bg-gradient-to-b from-brand-yellow to-transparent"></div>
   </div>
 </section>
 
-  <!-- ============ SERVICES ============ -->
- <section id="about" class="relative py-24 md:py-32">
+<!-- ============ ABOUT ============ -->
+<section id="about" class="relative py-24 md:py-32">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
 
-    <!-- ============ Header ============ -->
     <div data-reveal class="opacity-0 max-w-[640px] mb-16">
       <span class="inline-flex items-center gap-2 text-brand-yellowDark font-semibold text-sm mb-3">
         <span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>
-        Biz haqimizda
+        {% trans "Biz haqimizda" %}
       </span>
 
       <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05]">
-        Sizning Erkin<br />
-        <span class="text-brand-yellow">Transportingiz</span>
+        {% trans "Sizning Erkin" %}<br />
+        <span class="text-brand-yellow">{% trans "Transportingiz" %}</span>
       </h2>
 
       <p class="mt-5 text-lg text-brand-gray leading-relaxed">
-        Biz Toshkent bo‘ylab zamonaviy elektroskuterlar va yetkazib berish uchun
-        qulay sumkalarni ijaraga beramiz.
+        {% trans "Biz Toshkent bo‘ylab zamonaviy elektroskuterlar va yetkazib berish uchun qulay sumkalarni ijaraga beramiz." %}
       </p>
 
       <p class="mt-3 text-lg text-brand-gray leading-relaxed">
-        Tez yetkazib berish, yangi modellar, qulay narxlar va ajoyib xizmat —
-        bizni boshqalardan ajratib turadi.
+        {% trans "Tez yetkazib berish, yangi modellar, qulay narxlar va ajoyib xizmat — bizni boshqalardan ajratib turadi." %}
       </p>
     </div>
 
-    <!-- ============ Grid ============ -->
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
-      <!-- LEFT: Scooter Collage (большая карточка) -->
-    <a
-  href="#"
-  data-reveal
-  class="opacity-0 group relative lg:col-span-3 rounded-[40px] bg-brand-black text-white overflow-hidden min-h-[440px] flex flex-col justify-between p-10 md:p-12 transition-transform duration-500 hover:-translate-y-1"
->
-  <!-- ============ BACKGROUND VIDEO ============ -->
-  <video
-    data-collage-video
-    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-    src="{% static 'media/transport.mp4' %}"
-    autoplay
-    muted
-    loop
-    playsinline
-    preload="auto"
-    aria-hidden="true"
-  ></video>
+      <a href="#" data-reveal
+         class="opacity-0 group relative lg:col-span-3 rounded-[40px] bg-brand-black text-white overflow-hidden min-h-[440px] flex flex-col justify-between p-10 md:p-12 transition-transform duration-500 hover:-translate-y-1">
 
-  <!-- Затемнение поверх видео -->
-  <div
-    aria-hidden="true"
-    class="absolute inset-0 bg-gradient-to-br from-brand-black/85 via-brand-black/70 to-brand-black/90"
-  ></div>
+        <video data-collage-video class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+               src="{% static 'media/transport.mp4' %}" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
 
-  <!-- Тонкая сетка точек (опционально) -->
-  <div
-    aria-hidden="true"
-    class="pointer-events-none absolute inset-0 opacity-25"
-    style="
-      background-image: radial-gradient(rgba(255,215,0,0.18) 1px, transparent 1px);
-      background-size: 24px 24px;
-      mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%);
-      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%);
-    "
-  ></div>
+        <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-br from-brand-black/85 via-brand-black/70 to-brand-black/90"></div>
 
-  <!-- ============ Декоративные иконки ============ -->
-  <i
-    data-collage-icon
-    class="fa-solid fa-bolt absolute -right-6 -bottom-10 text-[260px] text-brand-yellow/10 rotate-[-12deg] transition-transform duration-700 group-hover:rotate-[-6deg] group-hover:scale-105 pointer-events-none"
-  ></i>
-  <i
-    data-collage-icon
-    class="fa-solid fa-location-dot absolute top-10 right-16 text-6xl text-brand-yellow/20 pointer-events-none"
-  ></i>
-  <i
-    data-collage-icon
-    class="fa-solid fa-scooter absolute top-24 right-40 text-5xl text-brand-yellow/15 rotate-[-8deg] pointer-events-none"
-  ></i>
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0 opacity-25"
+          style="background-image: radial-gradient(rgba(255,215,0,0.18) 1px, transparent 1px); background-size: 24px 24px; mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%);"
+        ></div>
 
-  <!-- ============ CONTENT ============ -->
+    <div data-parallax-p class="absolute -right-6 -bottom-10 pointer-events-none">
+  <i class="fa-solid fa-bolt text-[260px] text-brand-yellow/10 rotate-[-12deg] transition-transform duration-700 group-hover:rotate-[-6deg] group-hover:scale-105"></i>
+</div>
 
-  <!-- Заголовок коллажа -->
-  <div class="relative z-10">
-    <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-yellow/80">
-      Scooter Collage
-    </span>
-    <h3 class="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.05]">
-      Zamonaviy<br />
-      <span class="text-brand-yellow">elektroskuterlar</span>
-    </h3>
-    <p class="mt-4 text-white/70 text-lg max-w-[420px]">
-      Har bir model — shahar uchun. Yengil, tez va ishonchli.
-    </p>
-  </div>
+<div data-parallax-p class="absolute top-10 right-16 pointer-events-none">
+  <i class="fa-solid fa-location-dot text-6xl text-brand-yellow/20"></i>
+</div>
 
-  <!-- Номер #1 (большой) -->
-  <div class="relative z-10 flex items-end justify-between mt-10">
-    <div class="flex items-baseline gap-3">
-      <span class="text-[88px] md:text-[110px] leading-none font-extrabold tracking-tighter text-brand-yellow">
-        #1
-      </span>
-      <span class="text-white/70 text-lg font-medium mb-3">
-        Toshkentda
-      </span>
-    </div>
+<div data-parallax-p class="absolute top-24 right-40 pointer-events-none">
+  <i class="fa-solid fa-scooter text-5xl text-brand-yellow/15 rotate-[-8deg]"></i>
+</div>
+        <div class="relative z-10">
+          <span class="text-xs font-semibold tracking-[0.2em] uppercase text-brand-yellow/80">
+            {% trans "Scooter Collage" %}
+          </span>
+          <h3 class="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.05]">
+            {% trans "Zamonaviy" %}<br />
+            <span class="text-brand-yellow">{% trans "elektroskuterlar" %}</span>
+          </h3>
+          <p class="mt-4 text-white/70 text-lg max-w-[420px]">
+            {% trans "Har bir model — shahar uchun. Yengil, tez va ishonchli." %}
+          </p>
+        </div>
 
-    <span
-      class="w-14 h-14 grid place-items-center rounded-full bg-white/10 backdrop-blur-md group-hover:bg-brand-yellow group-hover:text-brand-black transition-all duration-300 group-hover:rotate-[-45deg]"
-    >
-      <i class="fa-solid fa-arrow-right"></i>
-    </span>
-  </div>
-</a>
+        <div class="relative z-10 flex items-end justify-between mt-10">
+          <div class="flex items-baseline gap-3">
+            <span class="text-[88px] md:text-[110px] leading-none font-extrabold tracking-tighter text-brand-yellow">#1</span>
+            <span class="text-white/70 text-lg font-medium mb-3">{% trans "Toshkentda" %}</span>
+          </div>
+          <span class="w-14 h-14 grid place-items-center rounded-full bg-white/10 backdrop-blur-md group-hover:bg-brand-yellow group-hover:text-brand-black transition-all duration-300 group-hover:rotate-[-45deg]">
+            <i class="fa-solid fa-arrow-right"></i>
+          </span>
+        </div>
+      </a>
 
-      <!-- RIGHT: статистика 3 карточки -->
       <div class="lg:col-span-2 flex flex-col gap-6">
 
-        <!-- 500+ -->
-        <div
-          data-reveal
-          class="opacity-0 group relative rounded-[32px] bg-brand-graySoft p-8 md:p-10 flex-1 flex items-center justify-between overflow-hidden hover:bg-brand-yellowSoft transition-colors duration-300"
-        >
+        <div data-reveal class="opacity-0 group relative rounded-[32px] bg-brand-graySoft p-8 md:p-10 flex-1 flex items-center justify-between overflow-hidden hover:bg-brand-yellowSoft transition-colors duration-300">
           <i class="fa-solid fa-users absolute -right-4 -bottom-6 text-[120px] text-brand-black/5"></i>
           <div class="relative">
-            <span
-              data-counter="500"
-              data-suffix="+"
-              class="block text-6xl md:text-7xl font-extrabold tracking-tighter text-brand-black"
-            >
-              0+
-            </span>
-            <span class="mt-2 block text-brand-gray text-base font-medium">
-              Mamnun mijozlar
-            </span>
+            <span data-counter="500" data-suffix="+" class="block text-6xl md:text-7xl font-extrabold tracking-tighter text-brand-black">0+</span>
+            <span class="mt-2 block text-brand-gray text-base font-medium">{% trans "Mamnun mijozlar" %}</span>
           </div>
-          <span
-            class="relative w-12 h-12 grid place-items-center rounded-2xl bg-white text-brand-black text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]"
-          >
+          <span class="relative w-12 h-12 grid place-items-center rounded-2xl bg-white text-brand-black text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]">
             <i class="fa-solid fa-users"></i>
           </span>
         </div>
 
-        <!-- 50+ -->
-        <div
-          data-reveal
-          class="opacity-0 group relative rounded-[32px] bg-brand-graySoft p-8 md:p-10 flex-1 flex items-center justify-between overflow-hidden hover:bg-brand-yellowSoft transition-colors duration-300"
-        >
+        <div data-reveal class="opacity-0 group relative rounded-[32px] bg-brand-graySoft p-8 md:p-10 flex-1 flex items-center justify-between overflow-hidden hover:bg-brand-yellowSoft transition-colors duration-300">
           <i class="fa-solid fa-scooter absolute -right-4 -bottom-6 text-[120px] text-brand-black/5"></i>
           <div class="relative">
-            <span
-              data-counter="50"
-              data-suffix="+"
-              class="block text-6xl md:text-7xl font-extrabold tracking-tighter text-brand-black"
-            >
-              0+
-            </span>
-            <span class="mt-2 block text-brand-gray text-base font-medium">
-              Skuterlar
-            </span>
+            <span data-counter="50" data-suffix="+" class="block text-6xl md:text-7xl font-extrabold tracking-tighter text-brand-black">0+</span>
+            <span class="mt-2 block text-brand-gray text-base font-medium">{% trans "Skuterlar" %}</span>
           </div>
-          <span
-            class="relative w-12 h-12 grid place-items-center rounded-2xl bg-white text-brand-black text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]"
-          >
+          <span class="relative w-12 h-12 grid place-items-center rounded-2xl bg-white text-brand-black text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]">
             <i class="fa-solid fa-scooter"></i>
           </span>
         </div>
 
-        <!-- 24/7 -->
-        <div
-          data-reveal
-          class="opacity-0 group relative rounded-[32px] bg-brand-black text-white p-8 md:p-10 flex-1 flex items-center justify-between overflow-hidden"
-        >
+        <div data-reveal class="opacity-0 group relative rounded-[32px] bg-brand-black text-white p-8 md:p-10 flex-1 flex items-center justify-between overflow-hidden">
           <i class="fa-solid fa-headset absolute -right-4 -bottom-6 text-[120px] text-brand-yellow/10"></i>
           <div class="relative">
-            <span
-              class="block text-6xl md:text-7xl font-extrabold tracking-tighter text-brand-yellow"
-            >
-              24/7
-            </span>
-            <span class="mt-2 block text-white/70 text-base font-medium">
-              24/7 qo‘llab-quvvatlash
-            </span>
+            <span class="block text-6xl md:text-7xl font-extrabold tracking-tighter text-brand-yellow">24/7</span>
+            <span class="mt-2 block text-white/70 text-base font-medium">{% trans "24/7 qo‘llab-quvvatlash" %}</span>
           </div>
-          <span
-            class="relative w-12 h-12 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]"
-          >
+          <span class="relative w-12 h-12 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]">
             <i class="fa-solid fa-headset"></i>
           </span>
         </div>
@@ -408,470 +277,421 @@
     </div>
   </div>
 </section>
- <section
-  id="how"
-  class="relative py-24 md:py-32 bg-brand-graySoft/60 border-y border-black/5 overflow-hidden"
->
+
+<!-- ============ HOW ============ -->
+<section id="how" class="relative py-24 md:py-32 bg-brand-graySoft/60 border-y border-black/5 overflow-hidden">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
 
-    <!-- ============ Header ============ -->
     <div data-reveal class="opacity-0 max-w-[620px] mb-16">
       <span class="inline-flex items-center gap-2 text-brand-yellowDark font-semibold text-sm mb-3">
         <span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>
-        Jarayon
+        {% trans "Jarayon" %}
       </span>
 
       <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05]">
-        Ariza qoldiring —
-        <span class="text-brand-yellow">qolganini biz qilamiz</span>
+        {% trans "Ariza qoldiring —" %}
+        <span class="text-brand-yellow">{% trans "qolganini biz qilamiz" %}</span>
       </h2>
 
       <p class="mt-5 text-lg text-brand-gray leading-relaxed">
-        Uch qadam: ariza → aloqa → shartnoma. Hech qanday navbat, hech qanday
-        ortiqcha harakat.
+        {% trans "Uch qadam: ariza → aloqa → shartnoma. Hech qanday navbat, hech qanday ortiqcha harakat." %}
       </p>
     </div>
 
-    <!-- ============ Steps grid ============ -->
     <div class="relative grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div aria-hidden="true" class="hidden md:block absolute top-[88px] left-[16%] right-[16%] h-px bg-gradient-to-r from-transparent via-brand-yellow/40 to-transparent"></div>
 
-      <!-- Соединительная линия (только desktop) -->
-      <div
-        aria-hidden="true"
-        class="hidden md:block absolute top-[88px] left-[16%] right-[16%] h-px bg-gradient-to-r from-transparent via-brand-yellow/40 to-transparent"
-      ></div>
-
-      <!-- ===== STEP 01 ===== -->
-      <div
-        data-reveal
-        data-step
-        class="opacity-0 group relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft"
-      >
+      <div data-reveal data-step class="opacity-0 group relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft">
         <div class="relative flex items-start justify-between">
-          <span
-            data-step-num
-            class="text-7xl md:text-8xl font-extrabold text-brand-yellow/40 leading-none tracking-tighter transition-colors duration-500 group-hover:text-brand-yellow"
-          >
-            01
-          </span>
-          <span
-            class="w-12 h-12 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-lg transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110"
-          >
+          <span data-step-num class="text-7xl md:text-8xl font-extrabold text-brand-yellow/40 leading-none tracking-tighter transition-colors duration-500 group-hover:text-brand-yellow">01</span>
+          <span class="w-12 h-12 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-lg transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110">
             <i class="fa-solid fa-paper-plane"></i>
           </span>
         </div>
-
-        <h3 class="mt-8 text-xl md:text-2xl font-bold tracking-tight">
-          Ariza qoldiring
-        </h3>
-        <p class="mt-3 text-brand-gray leading-relaxed">
-          Sayt yoki ilova orqali qisqa formani to‘ldiring — 30 soniyadan
-          ko‘p vaqt ketmaydi.
-        </p>
+        <h3 class="mt-8 text-xl md:text-2xl font-bold tracking-tight">{% trans "Ariza qoldiring" %}</h3>
+        <p class="mt-3 text-brand-gray leading-relaxed">{% trans "Sayt yoki ilova orqali qisqa formani to‘ldiring — 30 soniyadan ko‘p vaqt ketmaydi." %}</p>
       </div>
 
-      <!-- ===== STEP 02 ===== -->
-      <div
-        data-reveal
-        data-step
-        class="opacity-0 group relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft"
-      >
+      <div data-reveal data-step class="opacity-0 group relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft">
         <div class="relative flex items-start justify-between">
-          <span
-            data-step-num
-            class="text-7xl md:text-8xl font-extrabold text-brand-yellow/40 leading-none tracking-tighter transition-colors duration-500 group-hover:text-brand-yellow"
-          >
-            02
-          </span>
-          <span
-            class="w-12 h-12 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-lg transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110"
-          >
+          <span data-step-num class="text-7xl md:text-8xl font-extrabold text-brand-yellow/40 leading-none tracking-tighter transition-colors duration-500 group-hover:text-brand-yellow">02</span>
+          <span class="w-12 h-12 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-lg transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110">
             <i class="fa-solid fa-phone-volume"></i>
           </span>
         </div>
-
-        <h3 class="mt-8 text-xl md:text-2xl font-bold tracking-tight">
-          Siz bilan bog‘lanamiz
-        </h3>
-        <p class="mt-3 text-brand-gray leading-relaxed">
-          Operator 5 daqiqa ichida qo‘ng‘iroq qiladi, tafsilotlarni aniqlaydi
-          va qulay vaqtni tanlaydi.
-        </p>
+        <h3 class="mt-8 text-xl md:text-2xl font-bold tracking-tight">{% trans "Siz bilan bog‘lanamiz" %}</h3>
+        <p class="mt-3 text-brand-gray leading-relaxed">{% trans "Operator 5 daqiqa ichida qo‘ng‘iroq qiladi, tafsilotlarni aniqlaydi va qulay vaqtni tanlaydi." %}</p>
       </div>
 
-      <!-- ===== STEP 03 ===== -->
-      <div
-        data-reveal
-        data-step
-        class="opacity-0 group relative rounded-[32px] bg-brand-black text-white p-8 md:p-10 border border-transparent transition-all duration-500 hover:-translate-y-1 overflow-hidden"
-      >
-        <!-- Декоративная иконка на фоне -->
-        <i
-          data-step-icon
-          class="fa-solid fa-file-signature absolute -right-6 -bottom-8 text-[180px] text-brand-yellow/10 rotate-[-10deg] transition-transform duration-700 group-hover:rotate-[-4deg] group-hover:scale-105"
-        ></i>
+      <div data-reveal data-step class="opacity-0 group relative rounded-[32px] bg-brand-black text-white p-8 md:p-10 border border-transparent transition-all duration-500 hover:-translate-y-1 overflow-hidden">
+        <i data-step-icon class="fa-solid fa-file-signature absolute -right-6 -bottom-8 text-[180px] text-brand-yellow/10 rotate-[-10deg] transition-transform duration-700 group-hover:rotate-[-4deg] group-hover:scale-105"></i>
 
         <div class="relative flex items-start justify-between">
-          <span
-            data-step-num
-            class="text-7xl md:text-8xl font-extrabold text-brand-yellow leading-none tracking-tighter"
-          >
-            03
-          </span>
-          <span
-            class="w-12 h-12 grid place-items-center rounded-2xl bg-white/10 text-brand-yellow text-lg transition-all duration-500 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg] group-hover:scale-110"
-          >
+          <span data-step-num class="text-7xl md:text-8xl font-extrabold text-brand-yellow leading-none tracking-tighter">03</span>
+          <span class="w-12 h-12 grid place-items-center rounded-2xl bg-white/10 text-brand-yellow text-lg transition-all duration-500 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg] group-hover:scale-110">
             <i class="fa-solid fa-file-signature"></i>
           </span>
         </div>
 
-        <h3 class="relative mt-8 text-xl md:text-2xl font-bold tracking-tight">
-          Yetib boring va shartnoma tuzing
-        </h3>
+        <h3 class="relative mt-8 text-xl md:text-2xl font-bold tracking-tight">{% trans "Yetib boring va shartnoma tuzing" %}</h3>
         <p class="relative mt-3 text-white/70 leading-relaxed">
-          Biz aytgan manzilga yetib boring va
-          <span class="text-brand-yellow font-semibold">Mustang Shartnoma</span>ni
-          o‘qing. Roziligingizni bildirsangiz — kalitlar sizniki.
+          {% blocktrans %}Biz aytgan manzilga yetib boring va <span class="text-brand-yellow font-semibold">Mustang Shartnoma</span>ni o‘qing. Roziligingizni bildirsangiz — kalitlar sizniki.{% endblocktrans %}
         </p>
 
-        <!-- Мини-плашка с договором -->
-        <div
-          class="relative mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-yellow/15 border border-brand-yellow/30 text-brand-yellow text-sm font-semibold"
-        >
+        <div class="relative mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-yellow/15 border border-brand-yellow/30 text-brand-yellow text-sm font-semibold">
           <i class="fa-solid fa-circle-check"></i>
-          Mustang Shartnoma
+          {% trans "Mustang Shartnoma" %}
         </div>
       </div>
     </div>
 
-    <!-- ============ CTA внизу ============ -->
     <div data-reveal class="opacity-0 mt-14 flex flex-wrap items-center gap-4">
-      <a
-        id="howCtaBtn"
-        href="#contact-form"
-        class="inline-flex items-center gap-2.5 px-7 py-4 rounded-full bg-brand-yellow text-brand-black text-base font-semibold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300"
-      >
+      <a id="howCtaBtn" href="#contact-form"
+         class="inline-flex items-center gap-2.5 px-7 py-4 rounded-full bg-brand-yellow text-brand-black text-base font-semibold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300">
         <i class="fa-solid fa-paper-plane"></i>
-        Ariza qoldirish
+        {% trans "Ariza qoldirish" %}
       </a>
-
-      <span class="text-brand-gray text-sm">
-        O‘rtacha javob vaqti — 5 daqiqa
-      </span>
+      <span class="text-brand-gray text-sm">{% trans "O‘rtacha javob vaqti — 5 daqiqa" %}</span>
     </div>
 
   </div>
-  
 </section>
+
+<!-- ============ BENEFITS ============ -->
 <section id="benefits" class="relative py-24 md:py-32 bg-brand-graySoft/60 border-y border-black/5">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
 
-    <!-- ============ HEADER ============ -->
     <div data-reveal class="opacity-0 max-w-[720px] mb-16">
       <span class="inline-flex items-center gap-2 text-brand-yellowDark font-semibold text-sm mb-3">
         <span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>
-        Shartlar va imtiyozlar
+        {% trans "Shartlar va imtiyozlar" %}
       </span>
 
       <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05]">
-        Ariza topshirganingizdan keyin
-        <span class="text-brand-yellow">nima olasiz</span>
+        {% trans "Ariza topshirganingizdan keyin" %}
+        <span class="text-brand-yellow">{% trans "nima olasiz" %}</span>
       </h2>
 
       <p class="mt-5 text-lg text-brand-gray leading-relaxed">
-        Biz shaffof shartlar va adolatli javobgarlikni taklif qilamiz. Har bir
-        band aniq va tushunarli.
+        {% trans "Biz shaffof shartlar va adolatli javobgarlikni taklif qilamiz. Har bir band aniq va tushunarli." %}
       </p>
     </div>
 
-    <!-- ============ ЧТО ВХОДИТ (главные 3 карточки) ============ -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
 
-      <!-- 12 soat -->
-      <div
-        data-reveal
-        data-benefit
-        class="opacity-0 group relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft overflow-hidden"
-      >
+      <div data-reveal data-benefit class="opacity-0 group relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft overflow-hidden">
         <i class="fa-solid fa-clock absolute -right-4 -bottom-6 text-[120px] text-brand-black/5"></i>
-
         <div class="relative flex items-start justify-between">
-          <span
-            class="w-14 h-14 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110"
-          >
+          <span class="w-14 h-14 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110">
             <i class="fa-solid fa-clock"></i>
           </span>
           <span class="text-xs font-bold tracking-[0.15em] uppercase text-brand-yellowDark">01</span>
         </div>
-
-        <h3 class="relative mt-8 text-xl md:text-2xl font-bold tracking-tight">
-          12 soat ish kuni
-        </h3>
-        <p class="relative mt-3 text-brand-gray leading-relaxed">
-          Kuniga 12 soat ishlaysiz — jadval moslashuvchan, lekin barqaror va
-          oldindan ma’lum.
-        </p>
+        <h3 class="relative mt-8 text-xl md:text-2xl font-bold tracking-tight">{% trans "12 soat ish kuni" %}</h3>
+        <p class="relative mt-3 text-brand-gray leading-relaxed">{% trans "Kuniga 12 soat ishlaysiz — jadval moslashuvchan, lekin barqaror va oldindan ma’lum." %}</p>
       </div>
 
-      <!-- 8.000.000 -->
-      <div
-        data-reveal
-        data-benefit
-        class="opacity-0 group relative rounded-[32px] bg-brand-black text-white p-8 md:p-10 transition-all duration-500 hover:-translate-y-1 overflow-hidden"
-      >
+      <div data-reveal data-benefit class="opacity-0 group relative rounded-[32px] bg-brand-black text-white p-8 md:p-10 transition-all duration-500 hover:-translate-y-1 overflow-hidden">
         <i class="fa-solid fa-coins absolute -right-4 -bottom-6 text-[120px] text-brand-yellow/10"></i>
-
         <div class="relative flex items-start justify-between">
-          <span
-            class="w-14 h-14 grid place-items-center rounded-2xl bg-white/10 text-brand-yellow text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg] group-hover:scale-110"
-          >
+          <span class="w-14 h-14 grid place-items-center rounded-2xl bg-white/10 text-brand-yellow text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg] group-hover:scale-110">
             <i class="fa-solid fa-coins"></i>
           </span>
           <span class="text-xs font-bold tracking-[0.15em] uppercase text-brand-yellow">02</span>
         </div>
-
-        <h3 class="relative mt-8 text-xl md:text-2xl font-bold tracking-tight">
-          Birinchi oydan keyin to‘lov
-        </h3>
-        <p class="relative mt-3 text-white/60 leading-relaxed mb-5">
-          Muvaffaqiyatli birinchi oydan so‘ng biz sizga to‘laymiz:
-        </p>
-
+        <h3 class="relative mt-8 text-xl md:text-2xl font-bold tracking-tight">{% trans "Birinchi oydan keyin to‘lov" %}</h3>
+        <p class="relative mt-3 text-white/60 leading-relaxed mb-5">{% trans "Muvaffaqiyatli birinchi oydan so‘ng biz sizga to‘laymiz:" %}</p>
         <div class="relative flex items-baseline gap-2">
-          <span class="text-4xl md:text-5xl font-extrabold tracking-tighter text-brand-yellow">
-            8.000.000
-          </span>
-          <span class="text-white/60 text-base font-medium mb-1">so‘m / oy</span>
+          <span class="text-4xl md:text-5xl font-extrabold tracking-tighter text-brand-yellow">8.000.000</span>
+          <span class="text-white/60 text-base font-medium mb-1">{% trans "so‘m / oy" %}</span>
         </div>
-
-        <p class="relative mt-3 text-white/50 text-sm">
-          Har oy muntazam to‘lov — kechikishlarsiz.
-        </p>
+        <p class="relative mt-3 text-white/50 text-sm">{% trans "Har oy muntazam to‘lov — kechikishlarsiz." %}</p>
       </div>
 
-      <!-- Внутренняя поломка -->
-      <div
-        data-reveal
-        data-benefit
-        class="opacity-0 group relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft overflow-hidden"
-      >
+      <div data-reveal data-benefit class="opacity-0 group relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft overflow-hidden">
         <i class="fa-solid fa-shield-halved absolute -right-4 -bottom-6 text-[120px] text-brand-black/5"></i>
-
         <div class="relative flex items-start justify-between">
-          <span
-            class="w-14 h-14 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110"
-          >
+          <span class="w-14 h-14 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110">
             <i class="fa-solid fa-screwdriver-wrench"></i>
           </span>
           <span class="text-xs font-bold tracking-[0.15em] uppercase text-brand-yellowDark">03</span>
         </div>
-
-        <h3 class="relative mt-8 text-xl md:text-2xl font-bold tracking-tight">
-          Ichki nosozlik — bizning zimmamizda
-        </h3>
-        <p class="relative mt-3 text-brand-gray leading-relaxed">
-          Mashina ichida biror narsa buzilsa yoki ishdan chiqsa — barcha
-          ta’mirlash ishlarini kompaniya o‘z zimmasiga oladi.
-        </p>
+        <h3 class="relative mt-8 text-xl md:text-2xl font-bold tracking-tight">{% trans "Ichki nosozlik — bizning zimmamizda" %}</h3>
+        <p class="relative mt-3 text-brand-gray leading-relaxed">{% trans "Mashina ichida biror narsa buzilsa yoki ishdan chiqsa — barcha ta’mirlash ishlarini kompaniya o‘z zimmasiga oladi." %}</p>
       </div>
     </div>
 
-    <!-- ============ ЧТО ВХОДИТ / НЕ ВХОДИТ ============ -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-      <!-- ✅ Компания берёт на себя -->
-      <div
-        data-reveal
-        class="opacity-0 relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5"
-      >
+      <div data-reveal class="opacity-0 relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5">
         <div class="flex items-center gap-3 mb-6">
           <span class="w-11 h-11 grid place-items-center rounded-2xl bg-brand-yellow text-brand-black text-lg">
             <i class="fa-solid fa-circle-check"></i>
           </span>
           <div>
-            <h3 class="text-xl md:text-2xl font-bold tracking-tight">Kompaniya zimmasiga oladi</h3>
-            <p class="text-sm text-brand-gray">Ichki nosozliklar va xizmat</p>
+            <h3 class="text-xl md:text-2xl font-bold tracking-tight">{% trans "Kompaniya zimmasiga oladi" %}</h3>
+            <p class="text-sm text-brand-gray">{% trans "Ichki nosozliklar va xizmat" %}</p>
           </div>
         </div>
 
         <ul class="flex flex-col gap-4">
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-check text-brand-yellowDark mt-1"></i>
-            <span>Dvigatel, akkumulyator va elektronika nosozliklari</span>
+            <span>{% trans "Dvigatel, akkumulyator va elektronika nosozliklari" %}</span>
           </li>
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-check text-brand-yellowDark mt-1"></i>
-            <span>Rejali texnik xizmat ko‘rsatish va ehtiyot qismlar</span>
+            <span>{% trans "Rejali texnik xizmat ko‘rsatish va ehtiyot qismlar" %}</span>
           </li>
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-check text-brand-yellowDark mt-1"></i>
-            <span>Yoqilg‘i kartasi va marshrut bo‘yicha ko‘rsatmalar</span>
+            <span>{% trans "Yoqilg‘i kartasi va marshrut bo‘yicha ko‘rsatmalar" %}</span>
           </li>
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-check text-brand-yellowDark mt-1"></i>
-            <span>24/7 qo‘llab-quvvatlash xizmati</span>
+            <span>{% trans "24/7 qo‘llab-quvvatlash xizmati" %}</span>
           </li>
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-check text-brand-yellowDark mt-1"></i>
-            <span>Har oylik to‘lov — 8.000.000 so‘m</span>
+            <span>{% trans "Har oylik to‘lov — 8.000.000 so‘m" %}</span>
           </li>
         </ul>
       </div>
 
-      <!-- ❌ Ответственность водителя -->
-      <div
-        data-reveal
-        class="opacity-0 relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5"
-      >
+      <div data-reveal class="opacity-0 relative rounded-[32px] bg-white p-8 md:p-10 border border-black/5">
         <div class="flex items-center gap-3 mb-6">
           <span class="w-11 h-11 grid place-items-center rounded-2xl bg-brand-black text-brand-yellow text-lg">
             <i class="fa-solid fa-circle-exclamation"></i>
           </span>
           <div>
-            <h3 class="text-xl md:text-2xl font-bold tracking-tight">Haydovchi javobgar</h3>
-            <p class="text-sm text-brand-gray">Tashqi zarar va baxtsiz hodisalar</p>
+            <h3 class="text-xl md:text-2xl font-bold tracking-tight">{% trans "Haydovchi javobgar" %}</h3>
+            <p class="text-sm text-brand-gray">{% trans "Tashqi zarar va baxtsiz hodisalar" %}</p>
           </div>
         </div>
 
         <ul class="flex flex-col gap-4">
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-xmark text-red-400 mt-1"></i>
-            <span>Mashinani urib qo‘ysangiz — ta’mirlash sizning hisobingizdan</span>
+            <span>{% trans "Mashinani urib qo‘ysangiz — ta’mirlash sizning hisobingizdan" %}</span>
           </li>
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-xmark text-red-400 mt-1"></i>
-            <span>Yo‘l-transport hodisasi (YTH) sodir bo‘lsa — javobgarlik sizda</span>
+            <span>{% trans "Yo‘l-transport hodisasi (YTH) sodir bo‘lsa — javobgarlik sizda" %}</span>
           </li>
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-xmark text-red-400 mt-1"></i>
-            <span>Yo‘l harakati qoidalarini buzish oqibatidagi jarimalar</span>
+            <span>{% trans "Yo‘l harakati qoidalarini buzish oqibatidagi jarimalar" %}</span>
           </li>
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-xmark text-red-400 mt-1"></i>
-            <span>Mashinani boshqa shaxsga topshirish — taqiqlangan</span>
+            <span>{% trans "Mashinani boshqa shaxsga topshirish — taqiqlangan" %}</span>
           </li>
           <li class="flex items-start gap-3 text-brand-gray leading-relaxed">
             <i class="fa-solid fa-circle-xmark text-red-400 mt-1"></i>
-            <span>Spirtli ichimlik ta’sirida boshqarish — shartnoma bekor</span>
+            <span>{% trans "Spirtli ichimlik ta’sirida boshqarish — shartnoma bekor" %}</span>
           </li>
         </ul>
       </div>
     </div>
 
-    <!-- ============ CTA внизу ============ -->
-    <div
-      data-reveal
-      class="opacity-0 mt-14 flex flex-wrap items-center gap-4 justify-between"
-    >
+    <div data-reveal class="opacity-0 mt-14 flex flex-wrap items-center gap-4 justify-between">
       <div>
-        <p class="text-brand-black font-bold text-lg md:text-xl">
-          Shartlar sizga mos keladimi?
-        </p>
-        <p class="text-brand-gray text-sm mt-1">
-          Ariza qoldiring — qolganini biz hal qilamiz.
-        </p>
+        <p class="text-brand-black font-bold text-lg md:text-xl">{% trans "Shartlar sizga mos keladimi?" %}</p>
+        <p class="text-brand-gray text-sm mt-1">{% trans "Ariza qoldiring — qolganini biz hal qilamiz." %}</p>
       </div>
 
-      <a
-        id="benefitsCtaBtn"
-        href="#contact-form"
-        class="group inline-flex items-center gap-2.5 px-7 py-4 rounded-full bg-brand-yellow text-brand-black text-base font-semibold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300"
-      >
+      <a id="benefitsCtaBtn" href="#contact-form"
+         class="group inline-flex items-center gap-2.5 px-7 py-4 rounded-full bg-brand-yellow text-brand-black text-base font-semibold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300">
         <i class="fa-solid fa-paper-plane"></i>
-        Ariza qoldirish
+        {% trans "Ariza qoldirish" %}
       </a>
     </div>
   </div>
 </section>
+
+<!-- ============ SHARTNOMA VIDEO ============ -->
 <section class="relative py-24 md:py-32 overflow-hidden">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
 
-    <div
-      data-reveal
-      class="opacity-0 relative rounded-[40px] overflow-hidden bg-brand-black text-white min-h-[520px] md:min-h-[600px] flex items-center justify-center"
-    >
-      <!-- ============ BACKGROUND VIDEO ============ -->
-      <video
-        data-bg-video
-        class="absolute inset-0 w-full h-full object-cover scale-[1.02]"
-        src="{% static 'media/shartnoma.mp4' %}"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="auto"
-        aria-hidden="true"
-      ></video>
+    <div data-reveal class="opacity-0 relative rounded-[40px] overflow-hidden bg-brand-black text-white min-h-[520px] md:min-h-[600px] flex items-center justify-center">
 
-      <!-- Затемнение поверх видео -->
-      <div
-        class="absolute inset-0 bg-gradient-to-b from-brand-black/70 via-brand-black/60 to-brand-black/85"
-        aria-hidden="true"
+      <video data-bg-video class="absolute inset-0 w-full h-full object-cover scale-[1.02]"
+             src="{% static 'media/shartnoma.mp4' %}" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+
+      <div class="absolute inset-0 bg-gradient-to-b from-brand-black/70 via-brand-black/60 to-brand-black/85" aria-hidden="true"></div>
+
+      <div class="pointer-events-none absolute inset-0 opacity-30" aria-hidden="true"
+        style="background-image: radial-gradient(rgba(255,215,0,0.15) 1px, transparent 1px); background-size: 26px 26px; mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%);"
       ></div>
 
-      <!-- Тонкая сетка точек (глубина) -->
-      <div
-        class="pointer-events-none absolute inset-0 opacity-30"
-        aria-hidden="true"
-        style="
-          background-image: radial-gradient(rgba(255,215,0,0.15) 1px, transparent 1px);
-          background-size: 26px 26px;
-          mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%);
-          -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%);
-        "
-      ></div>
-
-      <!-- ============ CONTENT ============ -->
       <div class="relative z-10 text-center px-6 py-20 md:px-16 md:py-24 max-w-[860px]">
 
-        <!-- Бейдж -->
-        <span
-          data-reveal
-          class="opacity-0 inline-flex items-center gap-2 px-4 py-1.5 mb-7 rounded-full bg-brand-yellow/15 backdrop-blur-md border border-brand-yellow/30 text-brand-yellow text-sm font-semibold"
-        >
+        <span data-reveal class="opacity-0 inline-flex items-center gap-2 px-4 py-1.5 mb-7 rounded-full bg-brand-yellow/15 backdrop-blur-md border border-brand-yellow/30 text-brand-yellow text-sm font-semibold">
           <i class="fa-solid fa-bolt"></i>
-          Mustang Shartnoma
+          {% trans "Mustang Shartnoma" %}
         </span>
 
-        <!-- Заголовок -->
-        <h2
-          data-reveal
-          class="opacity-0 text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05]"
-        >
-          My Mustang<br class="hidden sm:block" />
-          <span class="text-brand-yellow">Shartnomasi</span>
+        <h2 data-reveal class="opacity-0 text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05]">
+          {% trans "My Mustang" %}<br class="hidden sm:block" />
+          <span class="text-brand-yellow">{% trans "Shartnomasi" %}</span>
         </h2>
 
-        <!-- Подзаголовок -->
-        <p
-          data-reveal
-          class="opacity-0 mt-6 text-lg md:text-xl text-white/70 max-w-[620px] mx-auto leading-relaxed"
-        >
-          Toshkent bo‘ylab skuter va sumkalarni ijaraga olish shartlari bilan
-          tanishing
+        <p data-reveal class="opacity-0 mt-6 text-lg md:text-xl text-white/70 max-w-[620px] mx-auto leading-relaxed">
+          {% trans "Toshkent bo‘ylab skuter va sumkalarni ijaraga olish shartlari bilan tanishing" %}
         </p>
 
-        <!-- Кнопка скачивания -->
-        <div
-          data-reveal
-          class="opacity-0 mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <a
-            href="{% static 'docs/mustang-pro-wb-shartnoma.docx' %}"
-            download="Mustang-Pro-Shartnoma.docx"
-            id="docDownloadBtn"
-            class="group inline-flex items-center gap-3 px-7 py-4 rounded-2xl bg-brand-yellow text-brand-black font-semibold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300"
-          >
-            <span
-              class="w-10 h-10 grid place-items-center rounded-xl bg-brand-black text-brand-yellow text-lg transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110"
-            >
+        <div data-reveal class="opacity-0 mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href="{% static 'docs/mustang-pro-wb-shartnoma.docx' %}"
+             download="Mustang-Pro-Shartnoma.docx"
+             id="docDownloadBtn"
+             class="group inline-flex items-center gap-3 px-7 py-4 rounded-2xl bg-brand-yellow text-brand-black font-semibold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300">
+            <span class="w-10 h-10 grid place-items-center rounded-xl bg-brand-black text-brand-yellow text-lg transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110">
               <i class="fa-solid fa-download"></i>
             </span>
             <span class="flex flex-col items-start leading-tight text-left">
-              <span class="text-xs text-brand-black/60 font-medium">Yuklab olish</span>
-              <span class="text-base">Shartnoma (DOCX)</span>
+              <span class="text-xs text-brand-black/60 font-medium">{% trans "Yuklab olish" %}</span>
+              <span class="text-base">{% trans "Shartnoma (DOCX)" %}</span>
             </span>
           </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ INSTAGRAM SCROLL VIDEOS ============ -->
+<section id="insta-scroll" class="relative bg-white text-brand-black">
+
+  <div data-insta-track class="relative" style="height: 400vh;">
+
+    <div class="sticky top-0 h-screen w-full overflow-hidden bg-white">
+      <div class="h-full mx-auto max-w-[1500px] px-6 lg:px-10 py-10 lg:py-14 flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-14">
+
+        <!-- ===== LEFT: текст ===== -->
+        <div class="lg:w-[38%] shrink-0 flex flex-col justify-between lg:justify-center gap-8 lg:gap-12 order-2 lg:order-1">
+
+          <div>
+            <span class="inline-flex items-center gap-2 text-brand-yellowDark font-semibold text-sm mb-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>
+              {% trans "Instagram" %}
+            </span>
+
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight leading-[1.05] text-brand-black">
+              {% trans "Mustang " %}<br />
+              <span class="text-brand-yellow">{% trans "reels" %}</span>
+            </h2>
+
+            <p class="mt-4 lg:mt-6 text-base lg:text-lg text-brand-gray leading-relaxed max-w-[440px]">
+              {% trans "Mustang kundalik hayotini ko‘ring." %}
+            </p>
+          </div>
+
+          <!-- Индикаторы (только desktop, на мобилке снизу) -->
+          <div class="hidden lg:flex flex-col gap-4">
+
+            <div class="flex items-center gap-2">
+              <button data-insta-dot="0" aria-label="Video 1"
+                class="relative h-[4px] w-20 rounded-full bg-black/10 overflow-hidden">
+                <span data-insta-fill="0" class="absolute inset-y-0 left-0 w-0 bg-brand-yellow"></span>
+              </button>
+              <button data-insta-dot="1" aria-label="Video 2"
+                class="relative h-[4px] w-20 rounded-full bg-black/10 overflow-hidden">
+                <span data-insta-fill="1" class="absolute inset-y-0 left-0 w-0 bg-brand-yellow"></span>
+              </button>
+              <button data-insta-dot="2" aria-label="Video 3"
+                class="relative h-[4px] w-20 rounded-full bg-black/10 overflow-hidden">
+                <span data-insta-fill="2" class="absolute inset-y-0 left-0 w-0 bg-brand-yellow"></span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button id="instaSoundToggleDesktop" data-muted="false" aria-label="Ovoz"
+                class="inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-brand-black text-white text-sm font-semibold hover:bg-brand-yellow hover:text-brand-black transition-all duration-300 shadow-[0_8px_24px_rgba(10,10,10,.15)]">
+                <i data-insta-sound-icon class="fa-solid fa-volume-high"></i>
+                <span data-insta-sound-label class="hidden sm:inline">Ovoz yoniq</span>
+              </button>
+
+              <a href="https://www.instagram.com/mustangtekin/" target="_blank" rel="noopener noreferrer"
+                class="inline-flex items-center gap-2.5 px-5 py-3 rounded-full border border-black/10 text-brand-black text-sm font-semibold hover:bg-brand-yellow hover:border-brand-yellow transition-all duration-300">
+                <i class="fa-brands fa-instagram"></i>
+                Instagram
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ===== RIGHT: карточка с видео ===== -->
+        <div class="lg:flex-1 lg:order-2 flex-1 flex items-center justify-center min-h-0">
+
+          <div class="relative w-full max-w-[520px] lg:max-w-none h-full lg:h-[80vh] aspect-auto lg:aspect-[4/5] rounded-[32px] lg:rounded-[40px] overflow-hidden bg-brand-black shadow-[0_30px_80px_rgba(10,10,10,.18)]">
+
+            <!-- Слои видео -->
+            <video
+              data-insta-video="0"
+              class="absolute inset-0 h-full w-full object-cover opacity-100 transition-opacity duration-700"
+              src="{% static 'media/video1.mp4' %}"
+              playsinline preload="metadata"
+              aria-hidden="true"></video>
+
+            <video
+              data-insta-video="1"
+              class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700"
+              src="{% static 'media/video2.mp4' %}"
+              playsinline preload="metadata"
+              aria-hidden="true"></video>
+
+            <video
+              data-insta-video="2"
+              class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700"
+              src="{% static 'media/video3.mp4' %}"
+              playsinline preload="metadata"
+              aria-hidden="true"></video>
+
+            <!-- Плейсхолдер + Start (пока не нажали Play) -->
+            <div data-insta-poster class="absolute inset-0 z-20 grid place-items-center bg-brand-black/40 backdrop-blur-[2px] transition-opacity duration-500">
+              <button id="instaStartBtn" aria-label="Boshlash"
+                class="group inline-flex items-center gap-3 pl-2 pr-7 py-2 rounded-full bg-brand-yellow text-brand-black font-bold shadow-[0_16px_48px_rgba(255,215,0,.5)] hover:scale-105 active:scale-100 transition-all duration-300">
+                <span class="w-12 h-12 grid place-items-center rounded-full bg-brand-black text-brand-yellow">
+                  <i class="fa-solid fa-play text-lg translate-x-[1px]"></i>
+                </span>
+                <span class="text-base">Start</span>
+              </button>
+            </div>
+
+            <!-- Мягкий градиент снизу карточки -->
+            <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/50 to-transparent z-[5]"></div>
+
+            <!-- Мобильная панель внутри карточки -->
+            <div class="lg:hidden absolute inset-x-0 bottom-0 z-10 p-4 flex items-center justify-between gap-3">
+
+              <div class="flex items-center gap-1.5">
+                <button data-insta-dot="0" aria-label="Video 1"
+                  class="relative h-[3px] w-12 rounded-full bg-white/30 overflow-hidden">
+                  <span data-insta-fill="0" class="absolute inset-y-0 left-0 w-0 bg-brand-yellow"></span>
+                </button>
+                <button data-insta-dot="1" aria-label="Video 2"
+                  class="relative h-[3px] w-12 rounded-full bg-white/30 overflow-hidden">
+                  <span data-insta-fill="1" class="absolute inset-y-0 left-0 w-0 bg-brand-yellow"></span>
+                </button>
+                <button data-insta-dot="2" aria-label="Video 3"
+                  class="relative h-[3px] w-12 rounded-full bg-white/30 overflow-hidden">
+                  <span data-insta-fill="2" class="absolute inset-y-0 left-0 w-0 bg-brand-yellow"></span>
+                </button>
+              </div>
+
+              <button id="instaSoundToggleMobile" data-muted="false" aria-label="Ovoz"
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/90 backdrop-blur-md text-brand-black text-xs font-semibold">
+                <i data-insta-sound-icon class="fa-solid fa-volume-high"></i>
+                <span data-insta-sound-label>Ovoz yoniq</span>
+              </button>
+
+            </div>
+
+          </div>
 
         </div>
 
@@ -879,477 +699,246 @@
     </div>
   </div>
 </section>
-<section
-  id="contacts"
-  class="relative py-24 md:py-32 bg-brand-graySoft/60 border-y border-black/5"
->
+
+
+
+<!-- ============ CONTACTS ============ -->
+<section id="contacts" class="relative py-24 md:py-32 bg-brand-graySoft/60 border-y border-black/5">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
 
-    <!-- ============ Header ============ -->
     <div data-reveal class="opacity-0 max-w-[620px] mb-16">
       <span class="inline-flex items-center gap-2 text-brand-yellowDark font-semibold text-sm mb-3">
         <span class="w-1.5 h-1.5 rounded-full bg-brand-yellow"></span>
-        Kontaktlar
+        {% trans "Kontaktlar" %}
       </span>
 
       <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05]">
-        Biz bilan <span class="text-brand-yellow">bog‘laning</span>
+        {% trans "Biz bilan" %} <span class="text-brand-yellow">{% trans "bog‘laning" %}</span>
       </h2>
 
       <p class="mt-5 text-lg text-brand-gray leading-relaxed">
-        Savollaringiz bormi? Qo‘ng‘iroq qiling yoki yozing — javob berishga
-        tayyormiz.
+        {% trans "Savollaringiz bormi? Qo‘ng‘iroq qiling yoki yozing — javob berishga tayyormiz." %}
       </p>
     </div>
 
-    <!-- ============ Grid ============ -->
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
-      <!-- ===== LEFT: контакты (2/5) ===== -->
       <div class="lg:col-span-2 flex flex-col gap-6">
 
-        <!-- Телефон -->
-        <a
-          href="tel:+998990805999"
-          data-reveal
-          class="opacity-0 group relative rounded-[32px] bg-white p-8 border border-black/5 flex items-start gap-4 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft"
-        >
-          <span
-            class="w-14 h-14 shrink-0 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110"
-          >
+        <a href="tel:+998990805999" data-reveal
+           class="opacity-0 group relative rounded-[32px] bg-white p-8 border border-black/5 flex items-start gap-4 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft">
+          <span class="w-14 h-14 shrink-0 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110">
             <i class="fa-solid fa-phone-volume"></i>
           </span>
           <span class="flex flex-col">
-            <span class="text-sm font-semibold text-brand-gray">Manzilimiz</span>
-            <span class="mt-1 text-xl md:text-2xl font-extrabold tracking-tight">
-              +998 99 080 59 99
-            </span>
-            <span class="mt-1 text-sm text-brand-gray">
-              Istagan vaqtda qo‘ng‘iroq qiling
-            </span>
+            <span class="text-sm font-semibold text-brand-gray">{% trans "Manzilimiz" %}</span>
+            <span class="mt-1 text-xl md:text-2xl font-extrabold tracking-tight">+998 99 080 59 99</span>
+            <span class="mt-1 text-sm text-brand-gray">{% trans "Istagan vaqtda qo‘ng‘iroq qiling" %}</span>
           </span>
-          <i
-            class="fa-solid fa-arrow-right ml-auto text-brand-gray group-hover:text-brand-black group-hover:translate-x-1 transition-all duration-300"
-          ></i>
+          <i class="fa-solid fa-arrow-right ml-auto text-brand-gray group-hover:text-brand-black group-hover:translate-x-1 transition-all duration-300"></i>
         </a>
 
-        <!-- Telegram -->
-        <a
-          href="https://t.me/YandexMustang"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-reveal
-          class="opacity-0 group relative rounded-[32px] bg-brand-black text-white p-8 flex items-start gap-4 transition-all duration-500 hover:-translate-y-1 overflow-hidden"
-        >
-          <i
-            class="fa-brands fa-telegram absolute -right-6 -bottom-8 text-[140px] text-brand-yellow/10 rotate-[-10deg] transition-transform duration-700 group-hover:rotate-[-4deg] group-hover:scale-105"
-          ></i>
-
-          <span
-            class="relative w-14 h-14 shrink-0 grid place-items-center rounded-2xl bg-white/10 text-brand-yellow text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg] group-hover:scale-110"
-          >
+        <a href="https://t.me/YandexMustang" target="_blank" rel="noopener noreferrer" data-reveal
+           class="opacity-0 group relative rounded-[32px] bg-brand-black text-white p-8 flex items-start gap-4 transition-all duration-500 hover:-translate-y-1 overflow-hidden">
+          <i class="fa-brands fa-telegram absolute -right-6 -bottom-8 text-[140px] text-brand-yellow/10 rotate-[-10deg] transition-transform duration-700 group-hover:rotate-[-4deg] group-hover:scale-105"></i>
+          <span class="relative w-14 h-14 shrink-0 grid place-items-center rounded-2xl bg-white/10 text-brand-yellow text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg] group-hover:scale-110">
             <i class="fa-brands fa-telegram"></i>
           </span>
           <span class="relative flex flex-col">
-            <span class="text-sm font-semibold text-white/60">Bizga yozing</span>
-            <span class="mt-1 text-xl md:text-2xl font-extrabold tracking-tight text-brand-yellow">
-              @YandexMustang
-            </span>
-            <span class="mt-1 text-sm text-white/50">
-              Telegram orqali tezkor javob
-            </span>
+            <span class="text-sm font-semibold text-white/60">{% trans "Bizga yozing" %}</span>
+            <span class="mt-1 text-xl md:text-2xl font-extrabold tracking-tight text-brand-yellow">@YandexMustang</span>
+            <span class="mt-1 text-sm text-white/50">{% trans "Telegram orqali tezkor javob" %}</span>
           </span>
-          <i
-            class="fa-solid fa-arrow-up-right-from-square relative ml-auto text-white/40 group-hover:text-brand-yellow group-hover:translate-x-1 transition-all duration-300"
-          ></i>
+          <i class="fa-solid fa-arrow-up-right-from-square relative ml-auto text-white/40 group-hover:text-brand-yellow group-hover:translate-x-1 transition-all duration-300"></i>
         </a>
 
-        <!-- Адрес -->
-        <div
-          data-reveal
-          class="opacity-0 group relative rounded-[32px] bg-white p-8 border border-black/5 flex items-start gap-4 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft"
-        >
-          <span
-            class="w-14 h-14 shrink-0 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110"
-          >
+        <div data-reveal
+             class="opacity-0 group relative rounded-[32px] bg-white p-8 border border-black/5 flex items-start gap-4 transition-all duration-500 hover:-translate-y-1 hover:border-brand-yellow hover:bg-brand-yellowSoft">
+          <span class="w-14 h-14 shrink-0 grid place-items-center rounded-2xl bg-brand-graySoft text-brand-black text-xl transition-all duration-500 group-hover:bg-brand-yellow group-hover:rotate-[-8deg] group-hover:scale-110">
             <i class="fa-solid fa-location-dot"></i>
           </span>
           <span class="flex flex-col">
-            <span class="text-sm font-semibold text-brand-gray">Manzil</span>
-            <span class="mt-1 text-xl md:text-2xl font-extrabold tracking-tight">
-              ул. Глинки 27
-            </span>
-            <span class="mt-1 text-sm text-brand-gray">Ташкент</span>
+            <span class="text-sm font-semibold text-brand-gray">{% trans "Manzil" %}</span>
+            <span class="mt-1 text-xl md:text-2xl font-extrabold tracking-tight">{% trans "ул. Глинки 27" %}</span>
+            <span class="mt-1 text-sm text-brand-gray">{% trans "Ташкент" %}</span>
           </span>
         </div>
 
       </div>
 
-     <!-- ===== RIGHT: карта (3/5) ===== -->
-<div class="lg:col-span-3">
-  <div
-    data-reveal
-    class="opacity-0 relative rounded-[40px] overflow-hidden bg-brand-black border border-black/5 min-h-[520px] flex flex-col"
-  >
-    <!-- Шапка над картой -->
-    <div class="relative z-10 flex items-center justify-between gap-4 px-6 md:px-8 py-5 bg-brand-black text-white shrink-0">
-      <div class="flex items-center gap-3">
-        <span class="w-10 h-10 grid place-items-center rounded-xl bg-brand-yellow text-brand-black text-sm">
-          <i class="fa-solid fa-map-location-dot"></i>
-        </span>
-        <div class="flex flex-col">
-          <span class="text-xs text-white/50 font-medium">Bizning joylashuvimiz</span>
-          <span class="text-base font-bold tracking-tight">
-            ул. Глинки 27, Ташкент
-          </span>
+      <div class="lg:col-span-3">
+        <div data-reveal class="opacity-0 relative rounded-[40px] overflow-hidden bg-brand-black border border-black/5 min-h-[520px] flex flex-col">
+
+          <div class="relative z-10 flex items-center justify-between gap-4 px-6 md:px-8 py-5 bg-brand-black text-white shrink-0">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 grid place-items-center rounded-xl bg-brand-yellow text-brand-black text-sm">
+                <i class="fa-solid fa-map-location-dot"></i>
+              </span>
+              <div class="flex flex-col">
+                <span class="text-xs text-white/50 font-medium">{% trans "Bizning joylashuvimiz" %}</span>
+                <span class="text-base font-bold tracking-tight">{% trans "ул. Глинки 27, Ташкент" %}</span>
+              </div>
+            </div>
+
+            <a href="https://www.google.com/maps/search/?api=1&query=41.28709387131273,69.2586377754937"
+               target="_blank" rel="noopener noreferrer" id="mapOpenBtn"
+               class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-brand-yellow text-brand-black text-sm font-semibold hover:bg-brand-yellowDark hover:-translate-y-0.5 transition-all duration-300">
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+              {% trans "Xaritani ochish" %}
+            </a>
+          </div>
+
+          <div class="relative flex-1 min-h-[400px]">
+            <iframe title="Mustang Taxi — Google Maps"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2998.00048674994!2d69.2586377754937!3d41.28709387131273!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8aea524ae053%3A0x9a98c140a13c8fa2!2z0YPQu9C40YbQsCDQk9C70LjQvdC60LggMjcsIDEwMDA3MCwg0KLQsNGI0LrQtdC90YIsIFRhc2hrZW50LCDQo9C30LHQtdC60LjRgdGC0LDQvQ!5e0!3m2!1sru!2s!4v1789126461929!5m2!1sru!2s"
+              class="absolute inset-0 w-full h-full border-0 block"
+              loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          </div>
+
+          <div class="sm:hidden p-4 bg-brand-black shrink-0">
+            <a href="https://www.google.com/maps/search/?api=1&query=41.28709387131273,69.2586377754937"
+               target="_blank" rel="noopener noreferrer"
+               class="flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-full bg-brand-yellow text-brand-black font-semibold shadow-glow active:scale-[0.98] transition-all duration-200">
+              <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+              {% trans "Xaritani yangi oynada ochish" %}
+            </a>
+          </div>
         </div>
       </div>
-
-      <a
-        href="https://www.google.com/maps/search/?api=1&query=41.28709387131273,69.2586377754937"
-        target="_blank"
-        rel="noopener noreferrer"
-        id="mapOpenBtn"
-        class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-brand-yellow text-brand-black text-sm font-semibold hover:bg-brand-yellowDark hover:-translate-y-0.5 transition-all duration-300"
-      >
-        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
-        Xaritani ochish
-      </a>
-    </div>
-
-    <!-- Карта -->
-    <div class="relative flex-1 min-h-[400px]">
-      <iframe
-        title="Mustang Taxi — Google Maps"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2998.00048674994!2d69.2586377754937!3d41.28709387131273!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8aea524ae053%3A0x9a98c140a13c8fa2!2z0YPQu9C40YbQsCDQk9C70LjQvdC60LggMjcsIDEwMDA3MCwg0KLQsNGI0LrQtdC90YIsIFRhc2hrZW50LCDQo9C30LHQtdC60LjRgdGC0LDQvQ!5e0!3m2!1sru!2s!4v1789126461929!5m2!1sru!2s"
-        class="absolute inset-0 w-full h-full border-0 block"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen
-      ></iframe>
-    </div>
-
-    <!-- Мобильная кнопка под картой -->
-    <div class="sm:hidden p-4 bg-brand-black shrink-0">
-      <a
-        href="https://www.google.com/maps/search/?api=1&query=41.28709387131273,69.2586377754937"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="flex items-center justify-center gap-2 w-full px-5 py-3.5 rounded-full bg-brand-yellow text-brand-black font-semibold shadow-glow active:scale-[0.98] transition-all duration-200"
-      >
-        <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
-        Xaritani yangi oynada ochish
-      </a>
-    </div>
-  </div>
-</div>
 
     </div>
   </div>
 </section>
 
+
+
+
+<!-- ============ CONTACT FORM ============ -->
 <section id="contact-form" class="relative py-24 md:py-32 overflow-hidden">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
 
-    <div
-      data-reveal
-      class="opacity-0 relative rounded-[40px] bg-brand-black text-white overflow-hidden grid lg:grid-cols-2"
-    >
-      <!-- ============ LEFT: инфо + BACKGROUND VIDEO ============ -->
+    <div data-reveal class="opacity-0 relative rounded-[40px] bg-brand-black text-white overflow-hidden grid lg:grid-cols-2">
+
       <div class="relative p-8 md:p-14 lg:p-16 flex flex-col justify-between overflow-hidden">
 
-        <!-- BACKGROUND VIDEO -->
-        <video
-          data-contact-video
-          class="absolute inset-0 w-full h-full object-cover"
-          src="{% static 'media/contact.mp4' %}"
-          autoplay
-          muted
-          loop
-          playsinline
-          preload="auto"
-          aria-hidden="true"
-        ></video>
+        <video data-contact-video class="absolute inset-0 w-full h-full object-cover"
+               src="{% static 'media/contact.mp4' %}" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
 
-        <!-- Затемнение (чёрное, чтобы текст читался) -->
-        <div
-          aria-hidden="true"
-          class="absolute inset-0 bg-gradient-to-br from-brand-black/90 via-brand-black/75 to-brand-black/90"
+        <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-br from-brand-black/90 via-brand-black/75 to-brand-black/90"></div>
+
+        <div aria-hidden="true" class="pointer-events-none absolute inset-0 opacity-30"
+          style="background-image: radial-gradient(rgba(255,215,0,0.15) 1px, transparent 1px); background-size: 26px 26px; mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%);"
         ></div>
 
-        <!-- Тонкая сетка точек поверх видео -->
-        <div
-          aria-hidden="true"
-          class="pointer-events-none absolute inset-0 opacity-30"
-          style="
-            background-image: radial-gradient(rgba(255,215,0,0.15) 1px, transparent 1px);
-            background-size: 26px 26px;
-            mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%);
-            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 75%);
-          "
-        ></div>
+        <i class="fa-solid fa-headset absolute -right-8 -bottom-10 text-[220px] text-brand-yellow/10 rotate-[-12deg] pointer-events-none"></i>
 
-        <!-- Декоративная иконка (поверх всего) -->
-        <i
-          class="fa-solid fa-headset absolute -right-8 -bottom-10 text-[220px] text-brand-yellow/10 rotate-[-12deg] pointer-events-none"
-        ></i>
-
-        <!-- ===== КОНТЕНТ ===== -->
         <div class="relative z-10">
-          <span
-            class="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full bg-brand-yellow/15 backdrop-blur-md border border-brand-yellow/30 text-brand-yellow text-sm font-semibold"
-          >
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 mb-6 rounded-full bg-brand-yellow/15 backdrop-blur-md border border-brand-yellow/30 text-brand-yellow text-sm font-semibold">
             <i class="fa-solid fa-bolt"></i>
-            Admin bilan bog‘laning
+            {% trans "Admin bilan bog‘laning" %}
           </span>
 
           <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05]">
-            Zayavka<br />
-            <span class="text-brand-yellow">qoldiring</span>
+            {% trans "Zayavka" %}<br />
+            <span class="text-brand-yellow">{% trans "qoldiring" %}</span>
           </h2>
 
           <p class="mt-5 text-lg text-white/70 max-w-[420px] leading-relaxed">
-            Formani to‘ldiring — biz tez orada siz bilan bog‘lanamiz.
+            {% trans "Formani to‘ldiring — biz tez orada siz bilan bog‘lanamiz." %}
           </p>
 
-          <!-- Контакты -->
           <div class="mt-10 flex flex-col gap-3">
-            <a
-              href="tel:+998990805999"
-              class="group inline-flex items-center gap-3 text-white hover:text-brand-yellow transition-colors duration-300"
-            >
-              <span
-                class="w-11 h-11 grid place-items-center rounded-2xl bg-white/10 backdrop-blur-md text-brand-yellow text-lg transition-all duration-300 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg]"
-              >
+            <a href="tel:+998990805999" class="group inline-flex items-center gap-3 text-white hover:text-brand-yellow transition-colors duration-300">
+              <span class="w-11 h-11 grid place-items-center rounded-2xl bg-white/10 backdrop-blur-md text-brand-yellow text-lg transition-all duration-300 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg]">
                 <i class="fa-solid fa-phone-volume"></i>
               </span>
               <span class="flex flex-col">
-                <span class="text-xs text-white/50">Telefon</span>
+                <span class="text-xs text-white/50">{% trans "Telefon" %}</span>
                 <span class="text-base font-semibold">+998 99 080 59 99</span>
               </span>
             </a>
 
-            <a
-              href="https://t.me/YandexMustang"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group inline-flex items-center gap-3 text-white hover:text-brand-yellow transition-colors duration-300"
-            >
-              <span
-                class="w-11 h-11 grid place-items-center rounded-2xl bg-white/10 backdrop-blur-md text-brand-yellow text-lg transition-all duration-300 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg]"
-              >
+            <a href="https://t.me/YandexMustang" target="_blank" rel="noopener noreferrer"
+               class="group inline-flex items-center gap-3 text-white hover:text-brand-yellow transition-colors duration-300">
+              <span class="w-11 h-11 grid place-items-center rounded-2xl bg-white/10 backdrop-blur-md text-brand-yellow text-lg transition-all duration-300 group-hover:bg-brand-yellow group-hover:text-brand-black group-hover:rotate-[-8deg]">
                 <i class="fa-brands fa-telegram"></i>
               </span>
               <span class="flex flex-col">
-                <span class="text-xs text-white/50">Telegram</span>
+                <span class="text-xs text-white/50">{% trans "Telegram" %}</span>
                 <span class="text-base font-semibold">@YandexMustang</span>
               </span>
             </a>
           </div>
         </div>
 
-        <!-- Плашка "Tez orada" -->
         <div class="relative z-10 mt-10 inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 self-start">
           <span class="relative flex h-2.5 w-2.5">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-60"></span>
             <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-yellow"></span>
           </span>
           <span class="text-sm font-medium text-white/80">
-            Tez orada <span class="text-brand-yellow font-semibold">Bog‘lanamiz</span>
+            {% trans "Tez orada" %} <span class="text-brand-yellow font-semibold">{% trans "Bog‘lanamiz" %}</span>
           </span>
         </div>
       </div>
 
-      <!-- ============ RIGHT: форма (без изменений) ============ -->
       <div class="relative bg-white text-brand-black p-8 md:p-14 lg:p-16">
-        <form id="leadForm" novalidate class="flex flex-col gap-5">
+        <form id="leadForm" method="post" novalidate class="flex flex-col gap-5">
+          {% csrf_token %}
 
-          <!-- Имя -->
           <div class="flex flex-col gap-2">
             <label for="firstName" class="text-sm font-semibold text-brand-gray">
-              Ismingiz <span class="text-brand-yellowDark">*</span>
+              {% trans "Ismingiz" %} <span class="text-brand-yellowDark">*</span>
             </label>
-            <input
-              id="firstName"
-              name="first_name"
-              type="text"
-              placeholder="Bobur"
-              autocomplete="given-name"
-              required
-              class="w-full px-5 py-3.5 rounded-2xl bg-brand-graySoft border border-transparent focus:border-brand-yellow focus:bg-white outline-none text-base transition-all duration-300 placeholder:text-brand-gray/60"
-            />
+            <input id="firstName" name="first_name" type="text" placeholder="{% trans 'Bobur' %}"
+                   autocomplete="given-name" required
+                   class="w-full px-5 py-3.5 rounded-2xl bg-brand-graySoft border border-transparent focus:border-brand-yellow focus:bg-white outline-none text-base transition-all duration-300 placeholder:text-brand-gray/60" />
             <span data-error="firstName" class="text-xs text-red-500 hidden"></span>
           </div>
 
-          <!-- Фамилия -->
           <div class="flex flex-col gap-2">
             <label for="lastName" class="text-sm font-semibold text-brand-gray">
-              Familiya
+              {% trans "Familiya" %}
             </label>
-            <input
-              id="lastName"
-              name="last_name"
-              type="text"
-              placeholder="Baxodirovich"
-              autocomplete="family-name"
-              class="w-full px-5 py-3.5 rounded-2xl bg-brand-graySoft border border-transparent focus:border-brand-yellow focus:bg-white outline-none text-base transition-all duration-300 placeholder:text-brand-gray/60"
-            />
+            <input id="lastName" name="last_name" type="text" placeholder="{% trans 'Baxodirovich' %}"
+                   autocomplete="family-name"
+                   class="w-full px-5 py-3.5 rounded-2xl bg-brand-graySoft border border-transparent focus:border-brand-yellow focus:bg-white outline-none text-base transition-all duration-300 placeholder:text-brand-gray/60" />
           </div>
 
-          <!-- Телефон -->
           <div class="flex flex-col gap-2">
             <label for="phone" class="text-sm font-semibold text-brand-gray">
-              Telefon Raqamingiz <span class="text-brand-yellowDark">*</span>
+              {% trans "Telefon Raqamingiz" %} <span class="text-brand-yellowDark">*</span>
             </label>
-            <input
-              id="phone"
-              name="phone"
-              type="tel"
-              inputmode="tel"
-              placeholder="+998 __ ___ __ __"
-              autocomplete="tel"
-              required
-              class="w-full px-5 py-3.5 rounded-2xl bg-brand-graySoft border border-transparent focus:border-brand-yellow focus:bg-white outline-none text-base transition-all duration-300 placeholder:text-brand-gray/60 tracking-wide"
-            />
-            <span class="text-xs text-brand-gray/70">Maska: +998 ## ### ## ##</span>
+            <input id="phone" name="phone" type="tel" inputmode="tel"
+                   placeholder="+998 __ ___ __ __" autocomplete="tel" required
+                   class="w-full px-5 py-3.5 rounded-2xl bg-brand-graySoft border border-transparent focus:border-brand-yellow focus:bg-white outline-none text-base transition-all duration-300 placeholder:text-brand-gray/60 tracking-wide" />
+            <span class="text-xs text-brand-gray/70">{% trans "Maska: +998 ## ### ## ##" %}</span>
             <span data-error="phone" class="text-xs text-red-500 hidden"></span>
           </div>
 
-          <!-- Savol -->
           <div class="flex flex-col gap-2">
             <label for="question" class="text-sm font-semibold text-brand-gray">
-              Savol
+              {% trans "Savol" %}
             </label>
-            <textarea
-              id="question"
-              name="question"
-              rows="4"
-              placeholder="Savolingizni yozing..."
-              class="w-full px-5 py-3.5 rounded-2xl bg-brand-graySoft border border-transparent focus:border-brand-yellow focus:bg-white outline-none text-base transition-all duration-300 resize-none placeholder:text-brand-gray/60"
-            ></textarea>
+            <textarea id="question" name="question" rows="4"
+                      placeholder="{% trans 'Savolingizni yozing...' %}"
+                      class="w-full px-5 py-3.5 rounded-2xl bg-brand-graySoft border border-transparent focus:border-brand-yellow focus:bg-white outline-none text-base transition-all duration-300 resize-none placeholder:text-brand-gray/60"></textarea>
           </div>
 
-          <!-- Submit -->
-          <button
-            type="submit"
-            id="submitBtn"
-            class="group inline-flex items-center justify-center gap-2.5 mt-2 px-8 py-4 rounded-2xl bg-brand-yellow text-brand-black text-base font-bold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300"
-          >
+          <button type="submit" id="submitBtn"
+                  class="group inline-flex items-center justify-center gap-2.5 mt-2 px-8 py-4 rounded-2xl bg-brand-yellow text-brand-black text-base font-bold shadow-glow hover:bg-brand-yellowDark hover:-translate-y-0.5 hover:shadow-glowHover active:translate-y-0 transition-all duration-300">
             <i class="fa-solid fa-paper-plane transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"></i>
-            <span>Yuborish</span>
+            <span>{% trans "Yuborish" %}</span>
           </button>
 
-          <!-- Status -->
-          <div
-            id="formStatus"
-            class="hidden rounded-2xl px-5 py-4 text-sm font-medium"
-            role="status"
-            aria-live="polite"
-          ></div>
+          <div id="formStatus" class="hidden rounded-2xl px-5 py-4 text-sm font-medium" role="status" aria-live="polite"></div>
 
         </form>
       </div>
     </div>
   </div>
 </section>
+
 {% endblock %}
 
-{% block extra_js %}
-<script type="module">
-  import { animate, stagger, spring, inView } from "https://cdn.jsdelivr.net/npm/motion@10/+esm";
-
-  const ease = [0.16, 1, 0.3, 1];
-
-  /* ---------- HERO: Badge ---------- */
-  animate('[data-hero="badge"]', { opacity: [0, 1], y: [16, 0] }, { duration: 0.6, easing: ease, delay: 0.1 });
-
-  /* ---------- HERO: заголовок по словам ---------- */
-  animate(
-    "[data-word]",
-    { opacity: [0, 1], y: [32, 0], filter: ["blur(8px)", "blur(0px)"] },
-    { duration: 0.9, easing: ease, delay: stagger(0.09, { start: 0.25 }) }
-  );
-
-  /* ---------- HERO: подзаголовок + кнопки ---------- */
-  animate(
-    '[data-hero="subtitle"]',
-    { opacity: [0, 1], y: [24, 0] },
-    { duration: 0.8, easing: ease, delay: stagger(0.15, { start: 0.8 }) }
-  );
-
-  /* ---------- HERO: линия ---------- */
-  animate("[data-line]", { width: ["0px", "100px"], opacity: [0, 1] }, { duration: 0.7, easing: ease, delay: 1.1 });
-
-  /* ---------- HERO: плавающие иконки ---------- */
-  document.querySelectorAll("[data-float]").forEach((el, i) => {
-    animate(el, { opacity: [0, 1], scale: [0.5, 1] }, { duration: 0.8, easing: ease, delay: 0.6 + i * 0.15 });
-    animate(
-      el,
-      { y: [0, -18, 0], rotate: [0, 4, 0] },
-      { duration: 6 + i * 0.5, delay: 1.5, repeat: Infinity, easing: "ease-in-out" }
-    );
-  });
-
-  /* ---------- HERO: пульс точки ---------- */
-  animate("[data-pulse]", { scale: [1, 1.5, 1], opacity: [1, 0.4, 1] }, { duration: 1.8, repeat: Infinity, easing: "ease-in-out" });
-
-  /* ---------- HERO: параллакс за мышью ---------- */
-  const hero = document.getElementById("hero");
-  const floaters = hero.querySelectorAll("[data-float]");
-  let raf = null;
-  hero.addEventListener("mousemove", (e) => {
-    if (raf) return;
-    raf = requestAnimationFrame(() => {
-      const rect = hero.getBoundingClientRect();
-      const cx = (e.clientX - rect.left) / rect.width - 0.5;
-      const cy = (e.clientY - rect.top) / rect.height - 0.5;
-      floaters.forEach((el, i) => {
-        const depth = 18 + i * 8;
-        el.style.transform = `translate3d(${cx * depth}px, ${cy * depth}px, 0)`;
-      });
-      raf = null;
-    });
-  });
-  hero.addEventListener("mouseleave", () => floaters.forEach((el) => (el.style.transform = "")));
-
-  /* ---------- HERO: клик по заголовку ---------- */
-  const h1 = hero.querySelector("h1");
-  h1.addEventListener("click", () => {
-    animate(h1, { scale: [1, 1.04, 1] }, { duration: 0.5, easing: spring({ stiffness: 300, damping: 15 }) });
-    animate("[data-word]", { color: ["#0a0a0a", "#ffd700", "#0a0a0a"] }, { duration: 0.9, delay: stagger(0.05) });
-  });
-
-  /* ---------- SCROLL REVEAL: секции и карточки ---------- */
-  inView(
-    "[data-reveal]",
-    ({ target }) => {
-      animate(target, { opacity: [0, 1], y: [28, 0] }, { duration: 0.7, easing: ease });
-    },
-    { margin: "0px 0px -10% 0px" }
-  );
-
-  /* ---------- СЧЁТЧИКИ статистики ---------- */
-  inView(
-    "#stats",
-    () => {
-      document.querySelectorAll("[data-counter]").forEach((el) => {
-        const target = parseFloat(el.dataset.target);
-        const suffix = el.dataset.suffix || "";
-        const decimals = parseInt(el.dataset.decimal || "0", 10);
-        const duration = 1400;
-        const start = performance.now();
-
-        const tick = (now) => {
-          const p = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - p, 3);
-          const value = target * eased;
-          el.textContent = value.toFixed(decimals) + suffix;
-          if (p < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      });
-    },
-    { amount: 0.6 }
-  );
-</script>
-{% endblock %}
+ 

@@ -628,43 +628,4 @@
 
 {% endblock %}
 
-{% block extra_js %}
-<script type="module">
-  import { animate, stagger, spring, inView } from "https://cdn.jsdelivr.net/npm/motion@10/+esm";
-  const EASE = [0.16, 1, 0.3, 1];
-
-  /* ---------- Reveal всех [data-reveal] ---------- */
-  document.querySelectorAll("[data-reveal]").forEach((el) => {
-    inView(
-      el,
-      () => {
-        animate(
-          el,
-          { opacity: [0, 1], y: [40, 0] },
-          { duration: 0.8, easing: EASE, fill: "both" }
-        );
-      },
-      { amount: 0.15 }
-    );
-  });
-
-  /* ---------- Floating иконки в hero ---------- */
-  document.querySelectorAll("[data-float]").forEach((el, i) => {
-    animate(el, { opacity: [0, 1], scale: [0.6, 1] }, { duration: 0.8, easing: EASE, delay: 0.4 + i * 0.2, fill: "both" });
-    animate(
-      el,
-      { y: [0, -14, 0], rotate: [0, 4, 0] },
-      { duration: 6 + i * 0.5, delay: 1.2, repeat: Infinity, easing: "ease-in-out" }
-    );
-  });
-
-  /* ---------- Spring на кнопках ---------- */
-  document.getElementById("heroPrimaryCta")?.addEventListener("click", (e) => {
-    animate(e.currentTarget, { scale: [1, 1.05, 1] }, { duration: 0.45, easing: spring({ stiffness: 300, damping: 14 }) });
-  });
-
-  document.getElementById("submitBtn")?.addEventListener("click", (e) => {
-    animate(e.currentTarget, { scale: [1, 1.05, 1] }, { duration: 0.45, easing: spring({ stiffness: 300, damping: 14 }) });
-  });
-</script>
-{% endblock %}
+ 

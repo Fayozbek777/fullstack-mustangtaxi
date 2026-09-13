@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
+from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
@@ -195,3 +196,39 @@ class Car(BaseTransport):
 
     def __str__(self):
         return self.nomi
+
+
+class VideoReview(models.Model):
+    """Видео-отзыв клиента/курьера."""
+
+    name = models.CharField(_("Имя"), max_length=80)
+    role = models.CharField(
+        _("Роль / должность"),
+        max_length=120,
+        blank=True,
+        help_text=_("Например: Курьер · 8 месяцев · Ташкент"),
+    )
+    video = models.FileField(
+        _("Видео"),
+        upload_to="reviews/videos/",
+        help_text=_("MP4, H.264, вертикальное 9:14, до 5 МБ"),
+    )
+    poster = models.ImageField(
+        _("Превью (необязательно)"),
+        upload_to="reviews/posters/",
+        blank=True,
+        null=True,
+        help_text=_("Картинка, которая покажется до старта видео"),
+    )
+    is_verified = models.BooleanField(_("Проверено"), default=True)
+    is_active = models.BooleanField(_("Показывать на сайте"), default=True)
+    order = models.PositiveIntegerField(_("Порядок"), default=0, db_index=True)
+    created_at = models.DateTimeField(_("Создано"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Видео-отзыв")
+        verbose_name_plural = _("Видео-отзывы")
+        ordering = ["order", "-created_at"]
+
+    def __str__(self):
+        return f"{self.name} — {self.role}"

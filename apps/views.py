@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Bag, Bicycle, Scooter
+from .models import Bag, Bicycle, Scooter, VideoReview, Car
 
 
 def index(request):
@@ -15,7 +15,6 @@ def terms(request):
 
 
 def bag_list(request):
-    """Sumkalar ijarasi sahifasi."""
     bags = Bag.objects.filter(faol=True)
     return render(request, "bags.html", {"bags": bags})
 
@@ -25,6 +24,16 @@ def bicycle_list(request):
     return render(request, "bicycle.html", {"items": items})
 
 
+def car_list(request):
+    cars = Car.objects.filter(faol=True)
+    return render(request, "cars.html", {"cars": cars})
+
+
 def scooter_list(request):
     items = Scooter.objects.filter(faol=True)
     return render(request, "scooter.html", {"items": items})
+
+
+def proof_view(request):
+    reviews = VideoReview.objects.filter(is_active=True)
+    return render(request, "proof.html", {"reviews": reviews})
